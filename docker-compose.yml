@@ -1,6 +1,5 @@
 version: '3'
 services:
-
   flask:
     build:
       context: flaskapp
@@ -9,12 +8,13 @@ services:
     restart: unless-stopped
     environment:
       APP_ENV: "prod"
-      APP_DEBUG: "False"
+      APP_DEBUG: "True"
       APP_PORT: 5000
       MONGODB_DATABASE: flaskdb
       MONGODB_USERNAME: flaskuser
       MONGODB_PASSWORD: flaskpass
       MONGODB_HOSTNAME: mongodb
+      MONGODB_PORT: 27017
     volumes:
       - appdata:/var/www
     depends_on:
