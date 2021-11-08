@@ -13,17 +13,10 @@ db = mongo.db
 
 @application.route('/')
 def index():
+    application.logger.info("GOT A REQUEST!")
     return jsonify(
         status=True,
-        message='Welcome to the Aubergine Flask app!'
-    )
-
-
-@application.route('/info')
-def index():
-    return jsonify(
-        status=True,
-        message='Info page!'
+        message='Welcome to the Auberdine Flask app!'
     )
 
 
