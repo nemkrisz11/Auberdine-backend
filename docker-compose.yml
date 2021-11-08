@@ -6,7 +6,6 @@ services:
       context: flaskapp
       dockerfile: Dockerfile
     container_name: flask
-    image: auberdine-flask
     restart: unless-stopped
     environment:
       APP_ENV: "prod"
@@ -44,7 +43,6 @@ services:
     build:
       context: nginx
       dockerfile: Dockerfile
-    image: auberdine-nginx
     container_name: webserver
     restart: unless-stopped
     environment:
