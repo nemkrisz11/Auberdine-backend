@@ -30,12 +30,13 @@ services:
     command: mongod --auth
     environment:
       MONGO_INITDB_ROOT_USERNAME: mongodbuser
-      MONGO_INITDB_ROOT_PASSWORD: 9vGzd6cKf94vAzUdu&^aUiFAK#mmQdornWX3
+      MONGO_INITDB_ROOT_PASSWORD: klqhweroiudslfkjqweilru234
       MONGO_INITDB_DATABASE: flaskdb
       MONGODB_DATA_DIR: /data/db
       MONDODB_LOG_DIR: /dev/null
     volumes:
-      - mongodbdata:/data/db
+      - mongodata:/data/db
+      - ./mongoinit:/docker-entrypoint-initdb.d/:ro
     networks:
       - backend
 
@@ -67,7 +68,7 @@ networks:
     driver: bridge
 
 volumes:
-  mongodbdata:
+  mongodata:
     driver: local
   appdata:
     driver: local
