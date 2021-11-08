@@ -19,14 +19,6 @@ def index():
     )
 
 
-@application.route('/info')
-def index():
-    return jsonify(
-        status=True,
-        message='Info page!'
-    )
-
-
 if __name__ == "__main__":
     ENV_DEBUG = os.environ.get("APP_DEBUG", True)
     ENV_PORT = os.environ.get("APP_PORT", 5000)
