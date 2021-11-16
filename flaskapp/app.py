@@ -1,6 +1,6 @@
 import os
 from flask import Flask, request, jsonify
-from mongoengine import StringField, ListField, URLField
+from mongoengine import StringField, ListField, URLField, BinaryField, ObjectIdField, DateTimeField, GeoPointField, IntField
 from mongoengine import Document, connect
 
 application = Flask(__name__)
@@ -12,18 +12,35 @@ connect(host=application.config["MONGO_URI"])
 
 class User(Document):
     name = StringField(required=True)
-    pwd_hash = StringField(required=True)
-    email = StringField()
+    pwd_hash = BinaryField(required=True)
+    hash_salt = BinaryField(required=True)
+    email = StringField(required=True)
+    friends = ListField(ObjectIdField)
+    friend_requests = ListField(ObjectIdField)
     meta = {
         "collection": "users"
     }
 
 
 class Place(Document):
+    google_place_id = StringField()
+    last_sync = DateTimeField()
     name = StringField(required=True)
     address = StringField(required=True)
+    location = GeoPointField()
+    website = URLField()
     meta = {
         "collection": "places"
+    }
+
+
+class Review(Document):
+    user_id = ObjectIdField(required=True)
+    place_id = ObjectIdField(required=True)
+    rating = IntField(required=True)
+    text = StringField(required=True)
+    meta = {
+        "collection": "reviews"
     }
 
 
