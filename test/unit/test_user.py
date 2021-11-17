@@ -1,6 +1,6 @@
 from flask import request
 import pytest
-from fixtures import client
+from test_fixtures import client
 from flaskapp.models.user import User
 
 

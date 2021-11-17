@@ -1,7 +1,8 @@
 import os
 from flask import Flask, jsonify, Blueprint
-from routes import friend_request, place, recommendation, user
-from flask_jwt_extended import JWTManager
+from flaskapp.routes import friend_request, place, recommendation
+from flaskapp.routes.user import login, register
+from flask_jwt_extended import JWTManager, jwt_required, get_jwt
 from mongoengine import connect
 import datetime
 import redis
@@ -10,6 +11,7 @@ bp = Blueprint("main", __name__)
 
 TOKEN_EXPIRES = datetime.timedelta(minutes=30)
 jwt = JWTManager()
+
 jwt_redis_blocklist = redis.StrictRedis(
     host="localhost", port=6379, db=0, decode_responses=True
 )
@@ -30,6 +32,18 @@ def check_if_token_is_revoked(jwt_header, jwt_payload):
     return token_in_redis is not None
 
 
+# Endpoint for revoking the current users access token. Save the JWTs unique
+# identifier (jti) in redis. Also set a Time to Live (TTL)  when storing the JWT
+# so that it will automatically be cleared out of redis after the token expires.
+@bp.route("/user/logout", methods=['POST'])
+@jwt_required()
+def logout_user():
+    jti = get_jwt()['jti']
+    jwt_redis_blocklist.set(jti, "", ex=TOKEN_EXPIRES)
+    return jsonify(msg="Access token revoked")
+
+
+
 def create_app():
     application = Flask(__name__)
     application.config["MONGO_URI"] = 'mongodb://' + os.environ['MONGODB_USERNAME'] + ':' + os.environ[
@@ -43,7 +57,7 @@ def create_app():
 
     connect(host=application.config["MONGO_URI"])
 
-    modules = [friend_request, place, recommendation, user.login, user.logout, user.register]
+    modules = [friend_request, place, recommendation, login, register]
     application.register_blueprint(bp)
     for module in modules:
         application.register_blueprint(module.bp)

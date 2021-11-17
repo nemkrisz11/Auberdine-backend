@@ -19,9 +19,9 @@ services:
       FLASKTEST_PATH: /var/www/test
       MONGOINIT_PATH: /var/www/mongoinit
     volumes:
-      - flaskdata:/var/www/flaskapp:ro
-      - flasktest:/var/www/test
-      - mongoinit:/var/www/mongoinit:ro
+      - ./flaskapp:/var/www/flaskapp:ro
+      - ./test:/var/www/test
+      - ./mongoinit:/var/www/mongoinit:ro
     depends_on:
       - mongodb
     networks:
@@ -41,7 +41,7 @@ services:
       MONDODB_LOG_DIR: /dev/null
     volumes:
       - mongodata:/data/db
-      - mongoinit:/docker-entrypoint-initdb.d/:ro
+      - ./mongoinit:/docker-entrypoint-initdb.d/:ro
     networks:
       - backend
 

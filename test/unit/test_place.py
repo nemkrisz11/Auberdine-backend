@@ -1,5 +1,5 @@
 import pytest
-from fixtures import client
+from test_fixtures import client
 from flask import request
 
 

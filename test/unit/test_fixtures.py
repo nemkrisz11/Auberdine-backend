@@ -1,5 +1,5 @@
 import pytest
-from flaskapp.app import create_app
+from flaskapp.app import *
 from mongoinit.init_flaskdb import init
 
 
