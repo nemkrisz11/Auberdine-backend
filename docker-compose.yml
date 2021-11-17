@@ -75,24 +75,5 @@ networks:
 volumes:
   mongodata:
     driver: local
-  mongoinit:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "./mongoinit"
   nginxdata:
     driver: local
-  flaskdata:
-    driver: local
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: './flaskapp'
-  flasktest:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "./test"
-

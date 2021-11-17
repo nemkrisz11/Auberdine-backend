@@ -11,29 +11,33 @@ bp = Blueprint('login_api', __name__, url_prefix="/user")
 
 @bp.route("/login", methods=['POST'])
 def login_user():
+    """
+    Logs in a user
+    e.g: POST /user/login
+    """
     form = LoginForm(request.form)
 
     if form.validate():
-        stored_user = User.objects(email=form.email)[0]
+        stored_user = User.objects(email=form.email.data).first()
 
         ph = PasswordHasher()
 
         try:
-            ph.verify(stored_user.pwd_hash, form.password)
+            ph.verify(stored_user.pwd_hash, form.password.data)
 
             # Generate token
-            access_token = create_access_token(identity=form.email)
+            access_token = create_access_token(identity=form.email.data)
 
             return jsonify(access_token=access_token)
 
         except VerifyMismatchError:
-            print(f"Authentication failed for user: {form.email}. Caused by: Bad password")
-            return None
+            print(f"Authentication failed for user: {str(form.email.data)}. Caused by: Bad password")
+            return "None"  # TODO
 
         except InvalidHash:
-            print(f"Authentication failed for user: {form.email}. Caused by: Invalid hash in db")
-            return None
+            print(f"Authentication failed for user: {str(form.email.data)}. Caused by: Invalid hash in db")
+            return "None"  # TODO
 
         except VerificationError:
-            print(f"Authentication failed for user: {form.email}. Caused by: Unknown")
-            return None
+            print(f"Authentication failed for user: {str(form.email.data)}. Caused by: Unknown")
+            return "None"  # TODO

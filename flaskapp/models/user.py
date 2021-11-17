@@ -3,9 +3,8 @@ from mongoengine import Document, StringField, ListField, BinaryField, ObjectIdF
 
 class User(Document):
     name = StringField(required=True)
-    pwd_hash = BinaryField(required=True)
-    # hash_salt = BinaryField(required=True)
-    email = StringField(required=True)
+    pwd_hash = StringField(required=True)
+    email = StringField(required=True, unique=True)
     friends = ListField(ObjectIdField)
     friend_requests = ListField(ObjectIdField)
     meta = {

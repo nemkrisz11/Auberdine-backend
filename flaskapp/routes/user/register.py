@@ -21,14 +21,14 @@ def register_user():
 
         try:
             new_user = User(
-                name=form.name,
-                email=form.email,
-                pwd_hash=ph.hash(form.password)
+                name=form.name.data,
+                email=form.email.data,
+                pwd_hash=ph.hash(form.password.data)
             ).save()
         except NotUniqueError:
-            return False
+            return str(form.errors.items()) + f"Form: {str(request.form)}"  # TODO
 
-        return True  # TODO: This is not what we agreed on in the API docs.
+        return "Successful registration!"  # TODO: This is not what we agreed on in the API docs.
 
     else:
-        return False
+        return str(form.errors.items()) + f"Form: {str(request.form)}"  # TODO:
