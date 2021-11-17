@@ -1,12 +1,10 @@
 import os
-from flask import Flask, jsonify, Blueprint
-from flask_restful import Api, Resource
+from flask import Flask
+from flask_restful import Api
 from flaskapp.routes.routes import initialize_routes
-from flask_jwt_extended import JWTManager, jwt_required
+from flask_jwt_extended import JWTManager
 from mongoengine import connect
 import datetime
-
-bp = Blueprint("main", __name__)
 
 TOKEN_EXPIRES = datetime.timedelta(hours=6)
 jwt = JWTManager()
@@ -28,7 +26,7 @@ def create_app():
     api = Api(app)
     initialize_routes(api)
 
-    # TODO: CORS?
+    # TODO: CORS might be needed for Angular?
 
     return app
 
