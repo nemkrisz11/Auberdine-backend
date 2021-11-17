@@ -16,7 +16,9 @@ services:
       MONGODB_HOSTNAME: mongodb
       MONGODB_PORT: 27017
     volumes:
-      - appdata:/var/www
+      - flaskdata:/var/www/flaskapp:ro
+      - flasktest:/var/www/test
+      - mongoinit:/var/www/mongoinit:ro
     depends_on:
       - mongodb
     networks:
@@ -36,7 +38,7 @@ services:
       MONDODB_LOG_DIR: /dev/null
     volumes:
       - mongodata:/data/db
-      - ./mongoinit:/docker-entrypoint-initdb.d/:ro
+      - mongoinit:/docker-entrypoint-initdb.d/:ro
     networks:
       - backend
 
@@ -70,7 +72,24 @@ networks:
 volumes:
   mongodata:
     driver: local
-  appdata:
+  mongoinit:
     driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "./mongoinit"
   nginxdata:
     driver: local
+  flaskdata:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: './flaskapp'
+  flasktest:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "./test"
+

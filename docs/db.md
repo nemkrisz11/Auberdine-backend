@@ -11,7 +11,8 @@
 | pwd_hash | Binary | password hash  |
 | friends | [ObjectId] | list of the user's friends |
 | friend_requests | [ObjectId] | list of user ids who sent friend requests to this user |
-| preferences | [String] | |
+
+
 ## Places
 
 | Field | Type | Notes |
@@ -23,6 +24,7 @@
 | address | String | |
 | location | GeoPoint (2dsphere) | latitude and longitude of the location |
 | website | String | URL for the website | 
+| pictures | [String] | list of URLs of images showing the place |
 
 ## Reviews
 
