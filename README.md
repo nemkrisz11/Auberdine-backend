@@ -20,6 +20,11 @@ First start the backend, then:
 docker exec -t flask /var/www/test/run_tests.sh
 ```
 
+Run tests and show stdout (prints) too:
+```
+docker exec -t flask /var/www/test/run_tests.sh --stdout
+```
+
 ## Manual testing
 
 ```

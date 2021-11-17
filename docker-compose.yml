@@ -15,6 +15,9 @@ services:
       MONGODB_PASSWORD: flaskpass
       MONGODB_HOSTNAME: mongodb
       MONGODB_PORT: 27017
+      FLASKAPP_PATH: /var/www/flaskapp
+      FLASKTEST_PATH: /var/www/test
+      MONGOINIT_PATH: /var/www/mongoinit
     volumes:
       - flaskdata:/var/www/flaskapp:ro
       - flasktest:/var/www/test
