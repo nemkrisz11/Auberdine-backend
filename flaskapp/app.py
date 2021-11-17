@@ -1,7 +1,7 @@
 import os
 from flask import Flask, jsonify, Blueprint
-from flaskapp.routes import friend_request, place, recommendation
-from flaskapp.routes.user import login, register
+from flask_restful import Api, Resource
+from flaskapp.routes.routes import initialize_routes
 from flask_jwt_extended import JWTManager, jwt_required
 from mongoengine import connect
 import datetime
@@ -12,34 +12,25 @@ TOKEN_EXPIRES = datetime.timedelta(hours=6)
 jwt = JWTManager()
 
 
-@bp.route('/')
-@jwt_required()
-def index():
-    return jsonify(
-        status=True,
-        message='Welcome to the Auberdine Flask application!'
-    )
-
-
 def create_app():
-    application = Flask(__name__)
-    application.config["MONGO_URI"] = 'mongodb://' + os.environ['MONGODB_USERNAME'] + ':' + os.environ[
+    app = Flask(__name__)
+    app.config["MONGO_URI"] = 'mongodb://' + os.environ['MONGODB_USERNAME'] + ':' + os.environ[
         'MONGODB_PASSWORD'] + '@' + os.environ['MONGODB_HOSTNAME'] + ':' + os.environ['MONGODB_PORT'] + '/' + \
         os.environ['MONGODB_DATABASE']
 
-    application.config["JWT_SECRET_KEY"] = "WpihOCz6HB6DgotdtmMabe7GJYLUIpWdAbNsK7bj4FgzWrFCrAOojog4g2sI3c4"
-    application.config["JWT_ACCESS_TOKEN_EXPIRES"] = TOKEN_EXPIRES
+    app.config["JWT_SECRET_KEY"] = "WpihOCz6HB6DgotdtmMabe7GJYLUIpWdAbNsK7bj4FgzWrFCrAOojog4g2sI3c4"
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = TOKEN_EXPIRES
 
-    jwt.init_app(application)
+    jwt.init_app(app)
 
-    connect(host=application.config["MONGO_URI"])
+    connect(host=app.config["MONGO_URI"])
 
-    modules = [friend_request, place, recommendation, login, register]
-    application.register_blueprint(bp)
-    for module in modules:
-        application.register_blueprint(module.bp)
+    api = Api(app)
+    initialize_routes(api)
 
-    return application
+    # TODO: CORS?
+
+    return app
 
 
 # if started directly, run with this config, won't be executed with wsgi
