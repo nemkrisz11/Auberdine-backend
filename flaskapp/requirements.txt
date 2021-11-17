@@ -1,17 +1,8 @@
-## The following requirements were added by pip freeze:
-certifi==2021.10.8
-charset-normalizer==2.0.7
-click==8.0.3
+argon2==0.1.10
+argon2-cffi==20.1.0
 Flask==2.0.2
-Flask-PyMongo==2.3.0
-idna==3.3
-itsdangerous==2.0.1
-Jinja2==3.0.2
-MarkupSafe==2.0.1
+Flask-JWT-Extended==4.3.1
 mongoengine==0.23.1
-## Pillow==8.4.0
-pymongo==3.12.1
-requests==2.26.0
-urllib3==1.26.7
-Werkzeug==2.0.2
-pytest>=6.2.5
+redis==4.0.1
+WTForms==2.3.3
+email-validator==1.1.3
