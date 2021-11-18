@@ -20,6 +20,13 @@ class User(Document):
         except (VerifyMismatchError, VerificationError, InvalidHash):
             return False
 
+    def change_password(self, password):
+        try:
+            ph = PasswordHasher()
+            self.password = ph.hash(password)
+        except:
+            return False  # TODO
+
     def __repr__(self):
         fields = {
             "name": self.name,
