@@ -54,26 +54,25 @@ db.users.insertMany(users);
  * Initialize friends of users
  */
 
-pista1 = db.users.findOne({"email":"pista1@x.y"})
-pista2 = db.users.findOne({"email":"pista2@x.y"})
-goldschmidt = db.users.findOne({"email":"goldschmidt@iit.bme.hu"})
-neumann = db.users.findOne({"email":"neumann@x.z"})
-newton = db.users.findOne({"email":"newton@gravity.org"})
-putin = db.users.findOne({"email":"vlad@kreml.ru"})
+pista1 = db.users.findOne({"email":"pista1@x.y"});
+pista2 = db.users.findOne({"email":"pista2@x.y"});
+goldschmidt = db.users.findOne({"email":"goldschmidt@iit.bme.hu"});
+neumann = db.users.findOne({"email":"neumann@x.z"});
+newton = db.users.findOne({"email":"newton@gravity.org"});
+putin = db.users.findOne({"email":"vlad@kreml.ru"});
 
-pista1.friends.push([pista2._id, goldschmidt._id])
-pista2.friends.push([pista1._id])
-goldschmidt.friends.push([pista1._id])
-neumann.friends.push([newton._id])
-newton.friends.push([neumann._id])
+db.users.updateOne({"email": pista1.email}, {"$set": {"friends": [pista2._id, goldschmidt._id]}});
+db.users.updateOne({"email": pista2.email}, {"$set": {"friends": [pista1._id]}});
+db.users.updateOne({"email": goldschmidt.email}, {"$set": {"friends": [pista1._id]}});
+db.users.updateOne({"email": neumann.email}, {"$set": {"friends": [newton._id]}});
+db.users.updateOne({"email": newton.email}, {"$set": {"friends": [neumann._id]}});
 
 /**
  * Initialize friend requests of users
  */
 
-newton.friend_requests.push([putin._id])
-neumann.friend_requests.push([pista1._id, pista2._id])
-
+db.users.updateOne({"email": newton.email}, {"$set": {"friend_requests": [putin._id]}});
+db.users.updateOne({"email": neumann.email}, {"$set": {"friend_requests": [pista1._id, pista2._id]}});
 
 /**
  * Initialize places
@@ -98,7 +97,7 @@ places = [
 {  "google_place_id" : "ChIJ0yTvOB7cQUcRgUfaTSWWQew", "last_sync" : ISODate("2021-11-19T10:31:27.050Z"), "name" : "Arany Kaviár Étterem", "address" : "Budapest, Ostrom utca 19", "location" : { "type" : "Point", "coordinates" : [ 47.5064327, 19.0285175 ] }, "pictures" : [ "Aap_uEA1946l-Puqe_BP50cOOMT-Ac3GS3iCngyzOqyqikfm42eWBiMMwYqeN8B1gH_hxBBEthcl67pWPj6dWZK4XZ5Zw4DQ45RdBwYkForY9g41qPcKtzH15mJP6BICywXEc41fsG3481WXSwpvkcNC1pyR3kaWDnRGXR4xN8f-vnu6gKA-" ] },
 {  "google_place_id" : "ChIJxw3Fo6DeQUcReG_xX5jNE5k", "last_sync" : ISODate("2021-11-19T10:31:27.051Z"), "name" : "Burger King", "address" : "Budapest, Széna tér 7", "location" : { "type" : "Point", "coordinates" : [ 47.5073034, 19.0269227 ] }, "pictures" : [ "Aap_uEA-wF8Lrcr0fsI_clAHwEWoRxTxjUCCfAaFTsAvdBMAAgSVEYSR38_WQ7o9y0R2TLIg8puM8QI3sTQWHbtwOinEfzMt0NrbBEZQ9jhQEJmfsQWzmHzT-7GDG5v8gokd1GgQtwg2ZYConPHa2KQGF_Hx-_yfAPsSufYZ_hx5zseNNwUR" ] },
 {  "google_place_id" : "ChIJLULxtL7eQUcR5YZibYLyB0E", "last_sync" : ISODate("2021-11-19T10:31:27.053Z"), "name" : "Lugas Vendéglő", "address" : "Budapest, Szilágyi Erzsébet fasor 77", "location" : { "type" : "Point", "coordinates" : [ 47.5116911, 19.0067253 ] }, "pictures" : [ "Aap_uECNOX-01_Uex1iAJTvqPU70NUr-ngp7hdS9zISmrLdkSAnz7ccA4VXcUjjEJVwvvtAxhSV2kqa92F_N6bMJGAYGkn5B9-7cRr8Ue5-S_UxNflCfNTDYHU1oTbKdEyZcG2hudHolSm3QmG_xXhYefu_WHHSHJ-X6y2R-6xbOhOARvEnW" ] },
-]
+];
 
 db.places.insertMany(places);
 
