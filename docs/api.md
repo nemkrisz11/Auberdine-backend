@@ -3,7 +3,7 @@
 | method | content-type | parameters  | return obj | desc | dev |
 | :---- | :-------: | :---: | :----: | :---- | :---- |
 | POST /user/register | form-data | [name,email,password] | [name: [String], email: [String], password: [String]] | error messages are in returned strings| Németh Krisztián |
-| POST /user/login | form-data | [name, password] | [name: [String], email: [String]| JWT returned in Auth header, returned values store error messages | Németh Krisztián |
+| POST /user/login | form-data | [email, password] | [name: [String], email: [String]| JWT returned in Auth header, returned values store error messages | Németh Krisztián |
 | POST /user/logout | - | - | [msg: String] | "ok" returned if succeed| Németh Krisztián |
 | GET /user/recommendations | raw/json | [count: Int]| [recommendations: Place[] ] | Get list of recommendations | Tremmel Márton |
 | GET /place/{place_id} | - | - | [PlaceDetails] | | Tremmel Márton |
