@@ -14,6 +14,7 @@ def create_app():
 
     app.config["JWT_SECRET_KEY"] = "WpihOCz6HB6DgotdtmMabe7GJYLUIpWdAbNsK7bj4FgzWrFCrAOojog4g2sI3c4"
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = TOKEN_EXPIRES
+    app.config["PROPAGATE_EXCEPTIONS"] = True
 
     jwt.init_app(app)
 

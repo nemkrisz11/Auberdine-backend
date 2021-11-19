@@ -3,6 +3,7 @@ from flask_restful import Resource
 from flask_jwt_extended import jwt_required, current_user
 from flaskapp.models.user import User
 from bson.objectid import ObjectId, InvalidId
+from mongoengine.errors import DoesNotExist
 
 
 class FriendsApi(Resource):
@@ -22,15 +23,18 @@ class FriendsApi(Resource):
     @jwt_required()
     def delete(self):
         if not request.is_json or "friend_id" not in request.json:
-            return jsonify(deleted=False)
+            return jsonify(msg="Invalid data type, friend_id is required in JSON")
 
         try:
             oid = ObjectId(request.json["friend_id"])
             current_user.friends.remove(oid)
             current_user.save()
-            return jsonify(deleted=True)
-        except (ValueError, InvalidId):
-            return jsonify(deleted=False)
+            other_user = User.objects.get(id__exact=oid)
+            other_user.friends.remove(current_user.id)
+            other_user.save()
+            return jsonify(msg="ok")
+        except (ValueError, InvalidId, DoesNotExist):
+            return jsonify(msg="Invalid friend_id")
 
 
 

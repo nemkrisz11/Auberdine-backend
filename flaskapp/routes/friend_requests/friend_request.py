@@ -23,17 +23,16 @@ class FriendRequestsApi(Resource):
     @jwt_required()
     def post(self):
         if not request.is_json or any([i not in request.json for i in ["user_id", "accepted"]]):
-            return jsonify(success=False)
-
+            return jsonify(msg="Invalid data type, user_id, accepted fields are needed in JSON")
         try:
             uid = ObjectId(request.json["user_id"])
             other_user = User.objects.get(id__exact=uid)
             accepted = request.json["accepted"]
         except (InvalidId, DoesNotExist):
-            return jsonify(success=False)
+            return jsonify(msg="Invalid user_id provided")
 
         if uid not in current_user.friend_requests:
-            return jsonify(success=False)
+            return jsonify(msg="Friend request does not exist")
 
         current_user.friend_requests.remove(uid)
         if accepted:
@@ -42,24 +41,24 @@ class FriendRequestsApi(Resource):
         other_user.save()
         current_user.save()
 
-        return jsonify(success=True)
+        return jsonify(msg="ok")
 
 
 class FriendRequestApi(Resource):
     @jwt_required()
     def post(self):
         if not request.is_json or "user_id" not in request.json:
-            return jsonify(success=False)
+            return jsonify(msg="Invalid data type, user_id is neeeded in JSON")
 
         try:
             uid = ObjectId(request.json["user_id"])
             other_user = User.objects.get(id__exact=uid)
         except (InvalidId, DoesNotExist):
-            return jsonify(success=False)
+            return jsonify(msg="Invalid user_id")
 
         if uid not in current_user.friend_requests and current_user.id not in other_user.friend_requests:
             other_user.friend_requests.append(current_user.id)
             other_user.save()
-            return jsonify(success=True)
+            return jsonify(msg="ok")
         else:
-            return jsonify(success=False)
+            return jsonify(msg="Friend request already exists")

@@ -23,6 +23,7 @@ class RegisterApi(Resource):
                     email=form.email.data,
                     password=ph.hash(form.password.data)
                 ).save()
+                return jsonify()
             except NotUniqueError:
                 return jsonify(email=['Már létezik egy felhasználó ezzel az email címmel!'])
         else:

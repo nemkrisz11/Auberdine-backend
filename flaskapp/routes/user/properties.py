@@ -39,8 +39,8 @@ class PropertiesApi(Resource):
                     current_user.change_password(form.new_password.data)
 
                 current_user.save()
-                return "ok"
+                return jsonify()
             else:
                 return jsonify(password=['Helytelen jelszó!'])
         else:
-            return str(form.errors)
+            return jsonify(form.errors)

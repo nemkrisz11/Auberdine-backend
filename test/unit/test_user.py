@@ -4,11 +4,7 @@ from fixtures import client
 from flaskapp.models.user import User
 
 
-def test_shiny_case():
-    assert True is bool([5])
-
-
-def test_users_exist(client):
+def test_get_user(client):
     """Test for GET /user/{user_id} route
 
     """
@@ -30,18 +26,31 @@ def test_valid_register(client):
                       "confirm": "12345678",
                       "email": "uniqueemail53498@a.b"
                       })
-    result = resp.json
+
     assert resp.status_code == 200
-    assert len(result.keys()) == 3
-    assert result["namevalid"] is True
-    assert result["emailvalid"] is True
-    assert result["passwordvalid"] is True
+    assert resp.is_json
+    assert resp.json == {}
+
+
 
 
 def test_valid_login(client):
     resp = client.post("/user/login",
                        data={"email": "goldschmidt@iit.bme.hu",
                              "password": "12345678"})
-    result = resp.json
     assert resp.status_code == 200
-    assert "access_token" in result
+    assert resp.is_json
+    assert len(resp.headers["Authorization"]) > 20  # TODO: more sensible token check
+
+
+
+
+def test_invalid_login(client):
+    resp = client.post("/user/login",
+                       data={"email": "goldschmidt@iit.bme.hu",
+                             "password": "qwertyasd"})
+    assert resp.status_code == 200
+    assert resp.is_json
+    assert "access_token" not in resp.json
+    assert "email" not in resp.json
+    assert "password" in resp.json
