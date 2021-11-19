@@ -24,6 +24,7 @@ services:
       - ./mongoinit:/var/www/mongoinit:ro
     depends_on:
       - mongodb
+      - redis
     networks:
       - frontend
       - backend
@@ -42,6 +43,15 @@ services:
     volumes:
       - mongodata:/data/db
       - ./mongoinit:/docker-entrypoint-initdb.d/:ro
+    networks:
+      - backend
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: unless-stopped
+    volumes:
+      - redisdata:/opt/redis
     networks:
       - backend
 
@@ -76,4 +86,6 @@ volumes:
   mongodata:
     driver: local
   nginxdata:
+    driver: local
+  redisdata:
     driver: local

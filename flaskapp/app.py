@@ -3,12 +3,8 @@ from flask import Flask
 from flask_restful import Api
 from flaskapp.routes.routes import initialize_routes
 from mongoengine import connect
-import datetime
 
-from flaskapp.authorization import jwt
-
-TOKEN_EXPIRES = datetime.timedelta(hours=6)
-
+from flaskapp.authorization import jwt, TOKEN_EXPIRES
 
 def create_app():
     app = Flask(__name__)
