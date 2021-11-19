@@ -23,7 +23,7 @@ def test_users_exist(client):
     #client.get("/user/{}".format(user._id))
 
 
-def test_register(client):
+def test_valid_register(client):
     resp = client.post("/user/register",
                 data={"name": "thisisauniqueuser34958",
                       "password": "12345678",
@@ -38,7 +38,7 @@ def test_register(client):
     assert result["passwordvalid"] is True
 
 
-def test_login(client):
+def test_valid_login(client):
     resp = client.post("/user/login",
                        data={"email": "goldschmidt@iit.bme.hu",
                              "password": "12345678"})

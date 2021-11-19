@@ -1,7 +1,6 @@
 from flask import jsonify
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt
-
 from flaskapp.authorization import jwt_redis_blocklist, TOKEN_EXPIRES
 
 

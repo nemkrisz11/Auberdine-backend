@@ -5,6 +5,8 @@ from flaskapp.routes.user.register import RegisterApi
 from flaskapp.routes.user.properties import PropertiesApi
 from flaskapp.routes.user.profile import ProfileApi
 from flaskapp.routes.place.debug_place import DebugPlaceApi
+from flaskapp.routes.friend_requests.friends import FriendsApi
+from flaskapp.routes.friend_requests.friend_request import FriendRequestApi, FriendRequestsApi
 
 
 def initialize_routes(api):
@@ -15,3 +17,6 @@ def initialize_routes(api):
     api.add_resource(ProfileApi, '/user/<user_id>')
     api.add_resource(IndexApi, '/')
     api.add_resource(DebugPlaceApi, "/place/debug_places")
+    api.add_resource(FriendsApi, "/user/friends")
+    api.add_resource(FriendRequestApi, "/user/friend_request")
+    api.add_resource(FriendRequestsApi, "/user/friend_requests")

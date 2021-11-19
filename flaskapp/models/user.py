@@ -7,8 +7,8 @@ class User(Document):
     name = StringField(required=True)
     password = StringField(required=True)
     email = StringField(required=True, unique=True)
-    friends = ListField(ObjectIdField)
-    friend_requests = ListField(ObjectIdField)
+    friends = ListField(ObjectIdField())
+    friend_requests = ListField(ObjectIdField())
     meta = {
         "collection": "users"
     }
