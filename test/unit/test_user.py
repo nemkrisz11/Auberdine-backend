@@ -32,8 +32,6 @@ def test_valid_register(client):
     assert resp.json == {}
 
 
-
-
 def test_valid_login(client):
     resp = client.post("/user/login",
                        data={"email": "goldschmidt@iit.bme.hu",
