@@ -14,4 +14,4 @@ class LogoutApi(Resource):
         """
         jti = get_jwt()["jti"]
         jwt_redis_blocklist.set(jti, "", ex=TOKEN_EXPIRES)
-        return jsonify(msg="Access token revoked")
+        return "ok"

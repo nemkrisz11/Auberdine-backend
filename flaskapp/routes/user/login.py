@@ -1,4 +1,4 @@
-from flask import request, jsonify
+from flask import request, jsonify, Response
 from flask_restful import Resource
 from flask_jwt_extended import create_access_token
 
@@ -18,8 +18,10 @@ class LoginApi(Resource):
             stored_user = User.objects(email__exact=form.email.data)
             if len(stored_user) > 0 and stored_user[0].check_password(form.password.data):
                 access_token = create_access_token(identity=stored_user[0])
-                return jsonify(access_token=access_token)
+                response = Response("ok")
+                response.headers['Authorization'] = access_token
+                return response
             else:
-                return "Invalid password!"
+                return "Hibás jelszó!"
         else:
-            return str(form.errors.items())  # TODO: Make this nicer
+            return jsonify(form.errors)
