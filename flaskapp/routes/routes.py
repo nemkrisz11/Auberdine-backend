@@ -13,5 +13,5 @@ def initialize_routes(api):
     api.add_resource(LogoutApi, '/user/logout')
     api.add_resource(PropertiesApi, '/user/properties')
     api.add_resource(ProfileApi, '/user/<user_id>')
-    api.add_resource(IndexApi, '/')  # TODO: Temporary URL
+    api.add_resource(IndexApi, '/')
     api.add_resource(DebugPlaceApi, "/place/debug_places")
