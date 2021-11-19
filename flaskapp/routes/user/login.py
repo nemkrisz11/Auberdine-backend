@@ -22,6 +22,6 @@ class LoginApi(Resource):
                 response.headers['Authorization'] = access_token
                 return response
             else:
-                return "Hibás jelszó!"
+                return jsonify(password=['Helytelen jelszó!'])
         else:
             return jsonify(form.errors)
