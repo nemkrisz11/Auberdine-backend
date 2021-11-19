@@ -35,3 +35,7 @@ class User(Document):
             "friends": self.friends,
             "friend_requests": self.friend_requests
         }
+        return fields
+
+    def __str__(self):
+        return repr(self)

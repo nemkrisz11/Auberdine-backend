@@ -15,6 +15,8 @@ class RegisterApi(Resource):
         """
         form = RegisterForm(request.form)
 
+        return_data = {i: True for i in ["namevalid", "emailvalid", "passwordvalid"]}
+
         if form.validate():
             ph = PasswordHasher()
 
@@ -25,9 +27,15 @@ class RegisterApi(Resource):
                     password=ph.hash(form.password.data)
                 ).save()
             except NotUniqueError:
-                return "This email address is already in use!"
-
-            return "Successful registration!"  # TODO: This is not what we agreed on in the API docs.
+                return_data["emailvaild"] = False
 
         else:
-            return "Invalid login!"
+            errors = form.errors.keys()
+            if "email" in errors:
+                return_data["emailvalid"] = False
+            if "name" in errors:
+                return_data["namevalid"] = False
+            if "password" in errors or "confirm" in errors:
+                return_data["passwordvalid"] = False
+
+        return return_data

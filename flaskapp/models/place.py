@@ -1,4 +1,4 @@
-from mongoengine import Document, StringField, DateTimeField, GeoPointField, URLField, ListField
+from mongoengine import Document, StringField, DateTimeField, PointField, URLField, ListField
 
 
 class Place(Document):
@@ -6,9 +6,9 @@ class Place(Document):
     last_sync = DateTimeField()
     name = StringField(required=True)
     address = StringField(required=True)
-    location = GeoPointField()
+    location = PointField()
     website = URLField()
-    pictures = ListField(StringField)
+    pictures = ListField(StringField())
     meta = {
         "collection": "places"
     }
@@ -25,4 +25,5 @@ class Place(Document):
         }
         return repr(fields)
 
-
+    def __str__(self):
+        return repr(self)

@@ -19,10 +19,10 @@
 | ---- | :----: | ---- |
 | id | ObjectId | |
 | google_place_id | String | id of the place in google places API |
-| last_sync | Timestamp | last time sync-ed from places API | 
+| last_sync | Timestamp | last time sync-ed from places API, value stored in utc got from datetime.datetime.utcnow |
 | name | String | displayed name of the place |
 | address | String | |
-| location | GeoPoint (2dsphere) | latitude and longitude of the location |
+| location | PointField (2dsphere) | latitude and longitude of the location |
 | website | String | URL for the website | 
 | pictures | [String] | list of URLs of images showing the place |
 

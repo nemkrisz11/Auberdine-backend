@@ -18,3 +18,6 @@ class Review(Document):
             "text": self.text
         }
         return repr(fields)
+
+    def __str__(self):
+        return repr(self)

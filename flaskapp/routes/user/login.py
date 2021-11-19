@@ -15,10 +15,9 @@ class LoginApi(Resource):
         form = LoginForm(request.form)
 
         if form.validate():
-            stored_user = User.objects.get(email=form.email.data)
-
-            if stored_user.check_password(form.password.data):
-                access_token = create_access_token(identity=stored_user)
+            stored_user = User.objects(email__exact=form.email.data)
+            if len(stored_user) > 0 and stored_user[0].check_password(form.password.data):
+                access_token = create_access_token(identity=stored_user[0])
                 return jsonify(access_token=access_token)
             else:
                 return "Invalid password!"
