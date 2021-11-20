@@ -3,14 +3,14 @@
 | method | content-type | parameters  | return obj | desc | dev |
 | :---- | :-------: | :---: | :----: | :---- | :---- |
 | POST /user/register | form-data | [name,email,password] | [name: [String], email: [String], password: [String]] | error messages are in returned strings| Németh Krisztián |
-| POST /user/login | form-data | [email, password] | [email: [String], password: [String]| JWT returned in Auth header, returned values store error messages | Németh Krisztián |
+| POST /user/login | form-data | [email, password] | [email: [String], password: [String]| JWT returned in body, returned values store error messages | Németh Krisztián |
 | POST /user/logout | - | - | [msg: String] | "ok" returned if succeed| Németh Krisztián |
 | GET /user/recommendations | application/json | [count: Int]| [recommendations: Place[] ] | Get list of recommendations | Tremmel Márton |
 | GET /place/{place_id} | - | - | [PlaceDetails] | | Tremmel Márton |
 | POST /place/rate/ | application/json | [place_id: String, rating: integer, description: String] | [msg: String] | | Tremmel Márton |
 | GET /user/{user_id} | - | - | [username, places: Place[]] | All places the user has rated. friend_ratings property contains user rating | Németh Krisztián |
 | GET /user/properties/ | - | - | [user: UserProperties] |  | Németh Krisztián |
-| POST /user/properties/ | application/json | [name (opt), password] | [name: [String], password: [String]] | Change name and password. returned fields store errors | Németh Krisztián |
+| POST /user/properties/ | application/json | [name (opt), password] | [new_name: [String], new_password: [String], password: [String]] | Change name and password. Requires additional password auth. Returned fields store errors | Németh Krisztián |
 | GET /user/friends/ | - | - | [friends: User[]] | get friends of the user | Borsodi Regő |
 | DELETE /user/friends/ | application/json |[friend_id: String] | [msg: String] | "ok" if no error| Borsodi Regő |
 | GET /user/friend_requests/ | - | - | [friend_requests: User[]] | | Borsodi Regő |
