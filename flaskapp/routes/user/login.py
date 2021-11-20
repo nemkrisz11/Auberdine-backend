@@ -19,9 +19,7 @@ class LoginApi(Resource):
             stored_user = User.objects(email__exact=form.email.data)
             if len(stored_user) > 0 and stored_user[0].check_password(form.password.data):
                 access_token = create_access_token(identity=stored_user[0])
-                response = jsonify()
-                response.headers['Authorization'] = access_token
-                return response
+                return jsonify(access_token=access_token)
             else:
                 return jsonify(password=['Helytelen jelszó!'])
         else:

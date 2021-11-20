@@ -31,8 +31,8 @@ class PropertiesApi(Resource):
         if form.validate():
             if current_user.check_password(form.password.data):
                 # Name change
-                if form.name is not None:
-                    current_user.name = form.name.data
+                if form.new_name is not None:
+                    current_user.name = form.new_name.data
 
                 # Password change
                 if form.new_password is not None:
@@ -43,11 +43,4 @@ class PropertiesApi(Resource):
             else:
                 return jsonify(password=['Helytelen jelszó!'])
         else:
-            err = form.errors
-            pw_err = err.setdefault("password", [])
-            if "new_password" in err:
-                pw_err.extend(err.pop("new_password"))
-            if "new_confirm" in err:
-                pw_err.extend(err.pop("new_confirm"))
-            return jsonify(err)
-
+            return jsonify(form.errors)
