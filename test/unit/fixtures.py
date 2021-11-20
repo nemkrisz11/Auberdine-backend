@@ -30,10 +30,10 @@ def token(client, request):
         "password": request.node.get_closest_marker("password").args[0]
     })
 
-    assert rv.is_json and rv.json == {}
-    assert "Authorization" in rv.headers
-    yield rv.headers["Authorization"]
+    assert rv.is_json and "access_token" in rv.json
+    token = rv.json["access_token"]
+    yield token
 
-    rv = client.delete("/user/logout", headers={"Authorization": "Bearer " + rv.headers["Authorization"]})
+    client.delete("/user/logout", headers={"Authorization": "Bearer " + token})
 
 

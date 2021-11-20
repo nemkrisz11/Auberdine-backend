@@ -57,8 +57,8 @@ def test_valid_login(client):
                        data={"email": "goldschmidt@iit.bme.hu",
                              "password": "12345678"})
     assert resp.status_code == 200
-    assert resp.is_json
-    assert len(resp.headers["Authorization"]) > 20  # TODO: more sensible token check
+    assert resp.is_json and "access_token" in resp.json
+    assert len(resp.json["access_token"]) > 20  # TODO: more sensible token check
 
 
 def test_invalid_login(client):
