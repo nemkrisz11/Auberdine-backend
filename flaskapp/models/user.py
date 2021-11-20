@@ -10,6 +10,13 @@ class User(Document):
     friends = ListField(ObjectIdField())
     friend_requests = ListField(ObjectIdField())
     meta = {
+        'indexes': [
+        {
+            'fields': ["$name"],
+            'default_language': 'hungarian',
+            'weights': {"name": 1}
+        }
+        ],
         "collection": "users"
     }
 
@@ -35,7 +42,8 @@ class User(Document):
             "friends": self.friends,
             "friend_requests": self.friend_requests
         }
-        return fields
+        return "User(" + repr(fields) + ")"
 
     def __str__(self):
         return repr(self)
+

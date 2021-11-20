@@ -43,4 +43,11 @@ class PropertiesApi(Resource):
             else:
                 return jsonify(password=['Helytelen jelszó!'])
         else:
-            return jsonify(form.errors)
+            err = form.errors
+            pw_err = err.setdefault("password", [])
+            if "new_password" in err:
+                pw_err.extend(err.pop("new_password"))
+            if "new_confirm" in err:
+                pw_err.extend(err.pop("new_confirm"))
+            return jsonify(err)
+

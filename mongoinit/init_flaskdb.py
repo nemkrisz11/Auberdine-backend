@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 from pathlib import Path
+from flaskapp.models import user, review, place
 import os
 import subprocess
 
@@ -21,3 +22,6 @@ def init(mongo_uri):
     script_dir = Path(__file__).parent.absolute()
     initscript = os.path.join(script_dir, "init_flaskdb.js")
     subprocess.run(["mongo", mongo_uri, initscript])
+    for cl in [place.Place, user.User, review.Review]:
+        cl.ensure_indexes()
+

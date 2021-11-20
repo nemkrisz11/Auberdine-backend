@@ -25,9 +25,9 @@ class FriendRequestsApi(Resource):
         if not request.is_json or any([i not in request.json for i in ["user_id", "accepted"]]):
             return jsonify(msg="Invalid data type, user_id, accepted fields are needed in JSON")
         try:
-            uid = ObjectId(request.json["user_id"])
+            uid = ObjectId(str(request.json["user_id"]))
             other_user = User.objects.get(id__exact=uid)
-            accepted = request.json["accepted"]
+            accepted = bool(request.json["accepted"])
         except (InvalidId, DoesNotExist):
             return jsonify(msg="Invalid user_id provided")
 
@@ -51,7 +51,7 @@ class FriendRequestApi(Resource):
             return jsonify(msg="Invalid data type, user_id is neeeded in JSON")
 
         try:
-            uid = ObjectId(request.json["user_id"])
+            uid = ObjectId(str(request.json["user_id"]))
             other_user = User.objects.get(id__exact=uid)
         except (InvalidId, DoesNotExist):
             return jsonify(msg="Invalid user_id")

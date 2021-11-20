@@ -35,6 +35,5 @@ def token(client, request):
     yield rv.headers["Authorization"]
 
     rv = client.delete("/user/logout", headers={"Authorization": "Bearer " + rv.headers["Authorization"]})
-    assert rv.is_json and rv.json["msg"] == "ok"
 
 

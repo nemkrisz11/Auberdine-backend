@@ -15,7 +15,7 @@
 | DELETE /user/friends/ | application/json |[friend_id: String] | [msg: String] | "ok" if no error| Borsodi Regő |
 | GET /user/friend_requests/ | - | - | [friend_requests: User[]] | | Borsodi Regő |
 | POST /user/friend_requests/ | application/json | [user_id: String, accepted: bool] | [msg: String] | "ok" if no error| Borsodi Regő |
-| GET /user/search/ | application/json | [query: String] | [users: User[]] | | Borsodi Regő |
+| POST /user/search/ | application/json | [query: String] | [users: User[]] | | Borsodi Regő |
 | POST /user/friend_request/ | application/json | [user_id: String] | [msg: String] | "ok" if no error | Borsodi Regő |
 
 

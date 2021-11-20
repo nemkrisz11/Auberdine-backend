@@ -26,7 +26,7 @@ class FriendsApi(Resource):
             return jsonify(msg="Invalid data type, friend_id is required in JSON")
 
         try:
-            oid = ObjectId(request.json["friend_id"])
+            oid = ObjectId(str(request.json["friend_id"]))
             current_user.friends.remove(oid)
             current_user.save()
             other_user = User.objects.get(id__exact=oid)

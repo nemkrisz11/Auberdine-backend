@@ -23,7 +23,7 @@ class Place(Document):
             "website": self.website,
             "pictures": self.pictures
         }
-        return repr(fields)
+        return "Place(" + repr(fields) + ")"
 
     def __str__(self):
         return repr(self)

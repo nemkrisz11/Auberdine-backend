@@ -17,7 +17,7 @@ class Review(Document):
             "rating": self.rating,
             "text": self.text
         }
-        return repr(fields)
+        return "Review(" + repr(fields) + ")"
 
     def __str__(self):
         return repr(self)

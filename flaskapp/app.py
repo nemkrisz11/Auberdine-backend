@@ -3,8 +3,9 @@ from flask import Flask
 from flask_restful import Api
 from flaskapp.routes.routes import initialize_routes
 from mongoengine import connect
-
+from flaskapp.models import user, place, review
 from flaskapp.authorization import jwt, TOKEN_EXPIRES
+
 
 def create_app():
     app = Flask(__name__)
@@ -22,6 +23,10 @@ def create_app():
 
     api = Api(app)
     initialize_routes(api)
+
+    # Initialize collections
+    for cl in [user.User, place.Place, review.Review]:
+        cl.ensure_indexes()
 
     # TODO: CORS might be needed for Angular?
 
