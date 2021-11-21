@@ -1,5 +1,7 @@
 # Auberdine-backend
 
+[API docs](./docs/api.md), [DB docs](./docs/db.md)
+
 ## Build and run the backend
 ```
 docker-compose build 
