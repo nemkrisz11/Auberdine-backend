@@ -1,16 +1,9 @@
-FROM alpine:latest
+FROM nginx:1.21.4
 
-LABEL MAINTAINER="FirstName LastName <example@domain.com>"
+RUN  rm -rf /etc/nginx/conf.d/default.conf
 
-RUN apk --update add nginx && \
-    ln -sf /dev/stdout /var/log/nginx/access.log && \
-    ln -sf /dev/stderr /var/log/nginx/error.log && \
-    mkdir /etc/nginx/sites-enabled/ && \
-    mkdir -p /run/nginx && \
-    rm -rf /etc/nginx/http.d/default.conf && \
-    rm -rf /var/cache/apk/*
-
-COPY http.d/app.conf /etc/nginx/http.d/app.conf
+COPY conf.d/proxy.conf /etc/nginx/conf.d/proxy.conf
 
 EXPOSE 80 443
+
 CMD ["nginx", "-g", "daemon off;"]

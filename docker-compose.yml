@@ -26,8 +26,8 @@ services:
       - mongodb
       - redis
     networks:
-      - frontend
-      - backend
+      backend:
+        ipv4_address: 172.23.0.2
 
   mongodb:
     image: mongo
@@ -46,7 +46,8 @@ services:
       - mongodata:/data/db
       - ./mongoinit:/docker-entrypoint-initdb.d/:ro
     networks:
-      - backend
+      backend:
+        ipv4_address: 172.23.0.3
 
   redis:
     image: redis:alpine
@@ -55,7 +56,22 @@ services:
     volumes:
       - redisdata:/opt/redis
     networks:
-      - backend
+      backend:
+        ipv4_address: 172.23.0.4
+
+  angular:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    container_name: angular
+    restart: unless-stopped
+    volumes:
+      - angulardata:/usr/share/nginx/html
+    depends_on:
+      - mongodb
+    networks:
+      backend:
+        ipv4_address: 172.23.0.5
 
   webserver:
     build:
@@ -73,16 +89,27 @@ services:
       - "443:443"
     volumes:
       - nginxdata:/var/log/nginx
+      - ./cert:/etc/nginx/certs
     depends_on:
       - flask
+      - angular
     networks:
-      - frontend
+      frontend:
+        ipv4_address: 172.24.0.2
+      backend:
+        ipv4_address: 172.23.0.6
 
 networks:
   frontend:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.24.0.0/16
   backend:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.23.0.0/16
 
 volumes:
   mongodata:
@@ -90,4 +117,6 @@ volumes:
   nginxdata:
     driver: local
   redisdata:
+    driver: local
+  angulardata:
     driver: local

@@ -1,10 +1,12 @@
 import os
 from flask import Flask
 from flask_restful import Api
-from flaskapp.routes.routes import initialize_routes
+from flask_cors import CORS
 from mongoengine import connect
+from flaskapp.routes.routes import initialize_routes
 from flaskapp.models import user, place, review
 from flaskapp.authorization import jwt, TOKEN_EXPIRES
+import logging
 
 
 def create_app():
@@ -17,6 +19,8 @@ def create_app():
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = TOKEN_EXPIRES
     app.config["PROPAGATE_EXCEPTIONS"] = True
 
+    logging.basicConfig(filename='/tmp/debug.log', level=logging.DEBUG)
+
     jwt.init_app(app)
 
     connect(host=app.config["MONGO_URI"])
@@ -28,7 +32,7 @@ def create_app():
     for cl in [user.User, place.Place, review.Review]:
         cl.ensure_indexes()
 
-    # TODO: CORS might be needed for Angular?
+    cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
     return app
 
