@@ -1,3 +1,5 @@
 [submodule "frontend"]
 	path = frontend
 	url = git@github.com:nemkrisz11/Auberdine-frontend.git
+[submodule "frontend/"]
+	branch = main
