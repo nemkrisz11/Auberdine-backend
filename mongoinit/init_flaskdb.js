@@ -98,6 +98,62 @@ places = [
 {  "google_place_id" : "ChIJxw3Fo6DeQUcReG_xX5jNE5k", "last_sync" : ISODate("2021-11-19T10:31:27.051Z"), "name" : "Burger King", "address" : "Budapest, Széna tér 7", "location" : { "type" : "Point", "coordinates" : [ 47.5073034, 19.0269227 ] }, "pictures" : [ "Aap_uEA-wF8Lrcr0fsI_clAHwEWoRxTxjUCCfAaFTsAvdBMAAgSVEYSR38_WQ7o9y0R2TLIg8puM8QI3sTQWHbtwOinEfzMt0NrbBEZQ9jhQEJmfsQWzmHzT-7GDG5v8gokd1GgQtwg2ZYConPHa2KQGF_Hx-_yfAPsSufYZ_hx5zseNNwUR" ] },
 {  "google_place_id" : "ChIJLULxtL7eQUcR5YZibYLyB0E", "last_sync" : ISODate("2021-11-19T10:31:27.053Z"), "name" : "Lugas Vendéglő", "address" : "Budapest, Szilágyi Erzsébet fasor 77", "location" : { "type" : "Point", "coordinates" : [ 47.5116911, 19.0067253 ] }, "pictures" : [ "Aap_uECNOX-01_Uex1iAJTvqPU70NUr-ngp7hdS9zISmrLdkSAnz7ccA4VXcUjjEJVwvvtAxhSV2kqa92F_N6bMJGAYGkn5B9-7cRr8Ue5-S_UxNflCfNTDYHU1oTbKdEyZcG2hudHolSm3QmG_xXhYefu_WHHSHJ-X6y2R-6xbOhOARvEnW" ] },
 ];
-
 db.places.insertMany(places);
 
+rubin = db.places.findOne({"google_place_id": "ChIJa6hBF8XdQUcROxJNKIQJBRg"})
+artbistrobar = db.places.findOne({"google_place_id": "ChIJt2RniRfcQUcRpiij772lJOw"})
+larus = db.places.findOne({"google_place_id": "ChIJ_UtEmincQUcRfmrMihpcE90"})
+gerbeaud = db.places.findOne({"google_place_id": "ChIJeQACh0DcQUcRVO6JctVQ5-g"})
+magyaros = db.places.findOne({"google_place_id": "ChIJVYP_FHncQUcR8FAYVz3LZA4"})
+burgerking = db.places.findOne({"google_place_id": "ChIJxw3Fo6DeQUcReG_xX5jNE5k"})
+dunaparti = db.places.findOne({"google_place_id": "ChIJXYbG8RfcQUcR9pOTQ6qyS10"})
+
+/**
+ * Initialize reviews
+ */
+
+db.createCollection("reviews");
+reviews = [
+    {
+        "user_id": pista1._id,
+        "place_id": rubin._id,
+        "rating": 3,
+        "text": "Kurva jó hely"
+    },
+    {
+        "user_id": pista2._id,
+        "place_id": larus._id,
+        "rating": 2,
+        "text": "Túl zajos hely"
+    },
+    {
+        "user_id": goldschmidt._id,
+        "place_id": magyaros._id,
+        "rating": 4,
+        "text": "public static void main(String[] args) {\nSystem.out.println(\"Jó kaja\");\n}"
+    },
+    {
+        "user_id": neumann._id,
+        "place_id": gerbeaud._id,
+        "rating": 5,
+        "text": "Great food and service"
+    },
+    {
+        "user_id": newton._id,
+        "place_id": artbistrobar._id,
+        "rating": 5,
+        "text": "Nice place, quiet music"
+    },
+    {
+        "user_id": newton._id,
+        "place_id": burgerking._id,
+        "rating": 3,
+        "text": "Too fatty burgers. :("
+    },
+    {
+        "user_id": putin._id,
+        "place_id": burgerking._id,
+        "rating": 1,
+        "text": "blyat"
+    }
+]

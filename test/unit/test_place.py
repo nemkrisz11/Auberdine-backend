@@ -6,13 +6,43 @@ from flask import request
 from fixtures import client
 from flaskapp.api_query import query_20_places
 from flaskapp.models.place import Place
+from flaskapp.models.review import Review
+from flaskapp.models.user import User
 
 
-def test_debug_places(client):
-    rv = client.get("/api/place/debug_places")
-    data = rv.json["places"]
-    good = ["Dayka Gábor utca 3" in place["address"] for place in data]
-    assert (any(good))
+@pytest.mark.email("newton@gravity.org")
+@pytest.mark.password("12345678")
+def test_get_place(client, token):
+    place = Place.objects.get(name__exact="Burger King")
+    headers = {"Authorization": "Bearer " + token}
+    resp = client.get("/api/place/{}".format(place._id), headers=headers)
+    assert resp.is_json and resp.status_code == 200
+    val = resp.json
+    assert val["name"] == "Burger King"
+    assert val["address"] == "Budapest, Széna tér 7"
+    assert type(val["location"]) == list
+    assert val["rating"] == 2.0
+    # TODO: check friend ratings field
+
+
+@pytest.mark.email("newton@gravity.org")
+@pytest.mark.password("12345678")
+def test_rate_place(client, token):
+    headers = {"Authorization": "Bearer " + token}
+    place = Place.objects.get(name__exact="Larus Étterem")
+    user = User.objects.get(email__exact="newton@gravity.org")
+    data = {
+        "place_id": str(place._id),
+        "rating": 4,
+        "description": "This is a new review."
+    }
+    resp = client.post("/api/place/rate", json=data, headers=headers)
+    assert resp.is_json and resp.status_code == 200
+    assert resp.json == {} or resp.json["msg"] == "ok"
+    review = Review.objects.get(place_id__exact=place._id, user_id__exact=user._id)
+    assert review.rating == 4
+    assert review.text == "This is a new review."
+
 
 
 # def test_api(client):

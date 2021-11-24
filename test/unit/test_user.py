@@ -3,21 +3,6 @@ from fixtures import client, token
 from flaskapp.models.user import User
 
 
-def test_get_user():
-    """Test for GET /api/user/{user_id} route
-
-    """
-
-    users = User.objects(name__contains="Goldschmidt")
-    assert len(users) == 1
-    user = users[0]
-    assert "iit" in user.email
-
-    users = User.objects()
-    assert len(users) >= 6
-    # client.get("/api/user/{}".format(user._id))
-
-
 def test_valid_register(client):
     resp = client.post("/api/user/register",
                 data={"name": "thisisauniqueuser34958",
@@ -80,6 +65,31 @@ def test_logout(client, token):
 
     resp = client.delete("/api/user/logout", headers={"Authorization": "Bearer " + token})
     assert resp.status_code == 401 and resp.is_json
+
+
+@pytest.mark.email("newton@gravity.org")
+@pytest.mark.password("12345678")
+def test_get_user(client, token):
+    """Test for GET /api/user/{user_id} route
+
+    """
+
+    users = User.objects(name__contains="Goldschmidt")
+    assert len(users) == 1
+    user = users[0]
+    assert "iit" in user.email
+
+    headers = {"Authorization": "Bearer " + token}
+    resp = client.get("/api/user/{}".format(user._id), headers=headers)
+    assert resp.is_json and resp.status_code == 200
+    assert resp.json["username"] == user.name
+    assert "places" in resp.json
+    assert len(resp.json["places"] == 1)
+    place = resp.json["places"]
+    assert "Magyaros" in place["name"]
+    assert place["rating"] == 4
+    assert "public static" in place["text"]
+    assert place["friend_ratings"] == []
 
 
 @pytest.mark.email("newton@gravity.org")
@@ -150,18 +160,20 @@ def test_set_user_properties_bad_name_bad_pw(client, token):
                                                      "password": "111234",
                                                      }, headers=headers)
     assert resp.is_json and resp.status_code == 200
-    assert "name" in resp.json
+    assert "new_name" in resp.json
     assert "password" in resp.json
-    assert "new_password" in resp.json
 
 
 @pytest.mark.email("newton@gravity.org")
 @pytest.mark.password("12345678")
-def test_set_user_properties_bad_name_bad_pw(client, token):
+def test_set_user_properties_good_name(client, token):
     headers = {"Authorization": "Bearer " + token}
-    resp = client.post("/api/user/properties", json={"name": "Isaac Oldton",
+    resp = client.post("/api/user/properties", json={"new_name": "Isaac Oldton",
                                                      "password": "12345678",
                                                      }, headers=headers)
     assert resp.is_json and resp.status_code == 200
-    assert "name" in resp.json
-    assert "password" in resp.json
+    assert "new_name" not in resp.json
+    resp = client.get("/api/user/properties", headers=headers)
+    assert resp.is_json and "name" in resp.json
+    assert resp.json["name"] == "Isaac Oldton"
+
