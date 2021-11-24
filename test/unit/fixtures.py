@@ -25,7 +25,7 @@ def token(client, request):
     """Logs in the user with the email in pytest.mark.email, and
     yields an access token """
 
-    rv = client.post("/user/login", data={
+    rv = client.post("/api/user/login", data={
         "email": request.node.get_closest_marker("email").args[0],
         "password": request.node.get_closest_marker("password").args[0]
     })
@@ -34,6 +34,6 @@ def token(client, request):
     token = rv.json["access_token"]
     yield token
 
-    client.delete("/user/logout", headers={"Authorization": "Bearer " + token})
+    client.delete("/api/user/logout", headers={"Authorization": "Bearer " + token})
 
 

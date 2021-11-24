@@ -8,7 +8,8 @@ from bson.objectid import ObjectId, InvalidId
 @pytest.mark.email("pista1@x.y")
 @pytest.mark.password("kutyafasz")
 def test_get_friends(client, token):
-    resp = client.get("/user/friends", headers={"Authorization": "Bearer " + token})
+    resp = client.get("/api/user/friends",
+                      headers={"Authorization": "Bearer " + token})
     assert resp.status_code == 200
     assert resp.headers["Content-Type"] == "application/json"
     assert len(resp.json) == 2
@@ -28,7 +29,7 @@ def test_get_friends(client, token):
 @pytest.mark.password("kutyafasz")
 def test_delete_friend(client, token):
     friend2 = User.objects.get(email__exact="goldschmidt@iit.bme.hu")
-    resp = client.delete("/user/friends", json={"friend_id": str(friend2.id)},
+    resp = client.delete("/api/user/friends", json={"friend_id": str(friend2.id)},
                          headers={"Authorization": "Bearer " + token})
     assert resp.status_code == 200
     assert resp.headers["Content-Type"] == "application/json"
@@ -43,7 +44,7 @@ def test_delete_friend(client, token):
 @pytest.mark.password("12345678")
 def test_delete_friend_error(client, token):
     non_friend = User.objects.get(email__exact="goldschmidt@iit.bme.hu")
-    resp = client.delete("/user/friends", json={"friend_id": str(non_friend.id)},
+    resp = client.delete("/api/user/friends", json={"friend_id": str(non_friend.id)},
                          headers={"Authorization": "Bearer " + token})
     assert resp.status_code == 200
     assert resp.headers["Content-Type"] == "application/json"
@@ -55,7 +56,7 @@ def test_delete_friend_error(client, token):
 @pytest.mark.email("neumann@x.z")
 @pytest.mark.password("12345678")
 def test_get_friend_requests(client, token):
-    resp = client.get("/user/friend_requests", headers={"Authorization": "Bearer " + token})
+    resp = client.get("/api/user/friend_requests", headers={"Authorization": "Bearer " + token})
     assert resp.status_code == 200 and resp.is_json
     assert len(resp.json) == 2
     for user in resp.json:
@@ -69,7 +70,7 @@ def test_get_friend_requests(client, token):
 @pytest.mark.password("12345678")
 def test_accept_friend_req(client, token):
     other = User.objects.get(email__exact="pista1@x.y")
-    resp = client.post("/user/friend_requests", json={"user_id": str(other.id),
+    resp = client.post("/api/user/friend_requests", json={"user_id": str(other.id),
                                                       "accepted": True},
                        headers={"Authorization": "Bearer " + token})
     assert resp.status_code == 200 and resp.is_json
@@ -85,7 +86,7 @@ def test_accept_friend_req(client, token):
 @pytest.mark.password("12345678")
 def test_decline_friend_req(client, token):
     other = User.objects.get(email__exact="pista1@x.y")
-    resp = client.post("/user/friend_requests", json={"user_id": str(other.id),
+    resp = client.post("/api/user/friend_requests", json={"user_id": str(other.id),
                                                       "accepted": False},
                        headers={"Authorization": "Bearer " + token})
     assert resp.status_code == 200 and resp.is_json
@@ -101,7 +102,7 @@ def test_decline_friend_req(client, token):
 @pytest.mark.password("12345678")
 def test_send_friend_req(client, token):
     other = User.objects.get(email__exact="vlad@kreml.ru")
-    resp = client.post("/user/friend_request", json={"user_id": str(other.id)},
+    resp = client.post("/api/user/friend_request", json={"user_id": str(other.id)},
                        headers={"Authorization": "Bearer " + token})
     assert resp.status_code == 200 and resp.is_json
     assert resp.json["msg"] == "ok"

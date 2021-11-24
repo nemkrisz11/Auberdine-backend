@@ -3,14 +3,14 @@
 | method | content-type | parameters  | return obj | desc | dev | done |
 | :---- | :-------: | :---: | :----: | :---- | :---- | :---: |
 | POST /api/user/register | form-data | [name,email,password] | [name: [String], email: [String], password: [String]] | error messages are in returned strings| Németh Krisztián | &check; | 
-| POST /api/user/login | form-data | [email, password] | [email: [String], password: [String]| JWT returned in body, returned values store error messages | Németh Krisztián | &check; | 
+| POST /api/user/login | form-data | [email, password] | [email: [String], password: [String], access_token| JWT returned in body, returned values store error messages | Németh Krisztián | &check; | 
 | POST /api/user/logout | - | - | [msg: String] | "ok" returned if succeed| Németh Krisztián | &check; | 
 | GET /api/user/recommendations | application/json | [count: Int]| [recommendations: Place[] ] | Get list of recommendations | Tremmel Márton | &cross; |
 | GET /api/place/{place_id} | - | - | [PlaceDetails] | | Tremmel Márton | &cross; | 
 | POST /api/place/rate/ | application/json | [place_id: String, rating: integer, description: String] | [msg: String] | | Tremmel Márton | &cross; | 
 | GET /api/user/{user_id} | - | - | [username, places: Place[]] | All places the user has rated. friend_ratings property contains user rating | Németh Krisztián | &cross; | 
 | GET /api/user/properties/ | - | - | [user: UserProperties] |  | Németh Krisztián | &check; | 
-| POST /api/user/properties/ | application/json | [name (opt), password] | [new_name: [String], new_password: [String], password: [String]] | Change name and password. Requires additional password auth. Returned fields store errors | Németh Krisztián | &check; |
+| POST /api/user/properties/ | application/json | [new_name(opt), password, new_password, new_confirm] | [new_name: [String], new_password: [String], password: [String]] | Change name and password. Requires additional password auth. Returned fields store errors | Németh Krisztián | &check; |
 | GET /api/user/friends/ | - | - | [friends: User[]] | get friends of the user | Borsodi Regő | &check; |
 | DELETE /api/user/friends/ | application/json |[friend_id: String] | [msg: String] | "ok" if no error| Borsodi Regő | &check; |
 | GET /api/user/friend_requests/ | - | - | [friend_requests: User[]] | | Borsodi Regő | &check; |

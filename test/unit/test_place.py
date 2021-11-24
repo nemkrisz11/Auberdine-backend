@@ -9,7 +9,7 @@ from flaskapp.models.place import Place
 
 
 def test_debug_places(client):
-    rv = client.get("/place/debug_places")
+    rv = client.get("/api/place/debug_places")
     data = rv.json["places"]
     good = ["Dayka Gábor utca 3" in place["address"] for place in data]
     assert (any(good))
@@ -34,7 +34,3 @@ def test_debug_places(client):
     #                   website=info.get("url", None)
     #                   )
     #     place.save()
-
-
-
-
