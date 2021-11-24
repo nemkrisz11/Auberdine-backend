@@ -156,4 +156,5 @@ reviews = [
         "rating": 1,
         "text": "blyat"
     }
-]
+];
+db.reviews.insertMany(reviews);

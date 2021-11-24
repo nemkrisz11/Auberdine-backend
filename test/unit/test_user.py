@@ -80,13 +80,13 @@ def test_get_user(client, token):
     assert "iit" in user.email
 
     headers = {"Authorization": "Bearer " + token}
-    resp = client.get("/api/user/{}".format(user._id), headers=headers)
+    resp = client.get("/api/user/{}".format(user.id), headers=headers)
     assert resp.is_json and resp.status_code == 200
-    assert resp.json["username"] == user.name
-    assert "places" in resp.json
-    assert len(resp.json["places"] == 1)
-    place = resp.json["places"]
-    assert "Magyaros" in place["name"]
+    assert resp.json["name"] == user.name
+    assert "reviews" in resp.json
+    assert len(resp.json["reviews"]) == 1
+    place = resp.json["reviews"][0]
+    assert "Magyaros" in place["place_name"]
     assert place["rating"] == 4
     assert "public static" in place["text"]
     assert place["friend_ratings"] == []
@@ -101,7 +101,6 @@ def test_search_valid(client, token):
     query = "goldschmidt"
     resp = search(query)
     assert resp.is_json and "users" in resp.json
-    print(resp.json)
     assert len(resp.json["users"]) == 1
     assert query in resp.json["users"][0]["name"].lower()
 

@@ -21,11 +21,12 @@ class ProfileApi(Resource):
         for review in user_reviews:
             place = Place.objects.get(id=review.place_id)
             user_reviewed_places.append({
-                "place_id": review.place_id,
+                "place_id": str(review.place_id),
                 "place_name": place.name,
                 "address": place.address,
                 "rating": review.rating,
                 "text": review.text,
+                # "friend_ratings": []
             })
 
         return jsonify({
