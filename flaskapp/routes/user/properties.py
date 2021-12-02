@@ -1,10 +1,7 @@
 from flask import request, jsonify
 from flask_restful import Resource
-from flask_jwt_extended import jwt_required, current_user, JWTManager
-
+from flask_jwt_extended import jwt_required, current_user
 from flaskapp.routes.forms import PropertiesForm
-
-jwt = JWTManager()
 
 
 class PropertiesApi(Resource):

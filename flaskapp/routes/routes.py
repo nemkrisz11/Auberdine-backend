@@ -8,6 +8,7 @@ from flaskapp.routes.friend_requests.friends import FriendsApi
 from flaskapp.routes.friend_requests.friend_request import FriendRequestApi, FriendRequestsApi
 from flaskapp.routes.user.search import UserSearchApi
 from flaskapp.routes.place.get_place import GetPlaceApi
+from flaskapp.routes.place.rate import RatePlaceApi
 
 
 def initialize_routes(api):
@@ -22,3 +23,4 @@ def initialize_routes(api):
     api.add_resource(FriendRequestsApi, "/api/user/friend_requests")
     api.add_resource(UserSearchApi, "/api/user/search")
     api.add_resource(GetPlaceApi, "/api/place/<place_id>")
+    api.add_resource(RatePlaceApi, "/api/place/rate")

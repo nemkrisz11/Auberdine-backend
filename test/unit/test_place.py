@@ -49,6 +49,27 @@ def test_rate_place(client, token):
     assert review.text == "This is a new review."
 
 
+@pytest.mark.email("newton@gravity.org")
+@pytest.mark.password("12345678")
+def test_rate_place_overwrite_existing(client, token):
+    headers = {"Authorization": "Bearer " + token}
+    place = Place.objects.get(name__exact="Burger King")
+    user = User.objects.get(email__exact="newton@gravity.org")
+    data = {
+        "place_id": str(place.id),
+        "rating": 4,
+        "description": "This is a new review."
+    }
+    resp = client.post("/api/place/rate", json=data, headers=headers)
+    assert resp.is_json and resp.status_code == 200
+    assert resp.json == {} or resp.json["msg"] == "ok"
+    reviews = Review.objects(place_id__exact=place.id, user_id__exact=user.id)
+    assert len(reviews) == 1
+    assert reviews[0].rating == 4
+    assert reviews[0].text == "This is a new review."
+
+
+
 
 # def test_api(client):
     # textre = query_20_places(api_key="AIzaSyDtlpG0YZrvbKJ2U2BAnEfCq0nY8Gi7zTk",

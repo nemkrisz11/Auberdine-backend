@@ -10,7 +10,7 @@
 | POST /api/place/rate/ | application/json | [place_id: String, rating: integer, description: String] | [msg: String] | | Tremmel Márton | &cross; | 
 | GET /api/user/{user_id} | - | - | [name, reviews: Place[]] | All places the user has rated. friend_ratings property contains user rating | Németh Krisztián | &check; | 
 | GET /api/user/properties/ | - | - | [user: UserProperties] |  | Németh Krisztián | &check; | 
-| POST /api/user/properties/ | application/json | [new_name(opt), password, new_password, new_confirm] | [new_name: [String], new_password: [String], password: [String]] | Change name and password. Requires additional password auth. Returned fields store errors | Németh Krisztián | &check; |
+| POST /api/user/properties/ | form-data | [new_name(opt), password, new_password, new_confirm] | [new_name: [String], new_password: [String], password: [String]] | Change name and password. Requires additional password auth. Returned fields store errors | Németh Krisztián | &check; |
 | GET /api/user/friends/ | - | - | [friends: User[]] | get friends of the user | Borsodi Regő | &check; |
 | DELETE /api/user/friends/ | application/json |[friend_id: String] | [msg: String] | "ok" if no error| Borsodi Regő | &check; |
 | GET /api/user/friend_requests/ | - | - | [friend_requests: User[]] | | Borsodi Regő | &check; |

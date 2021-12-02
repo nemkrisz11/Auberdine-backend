@@ -15,7 +15,7 @@ class GetPlaceApi(Resource):
             pid = ObjectId(str(place_id))
             place = Place.objects.get(id__exact=pid)
         except (InvalidId, DoesNotExist):
-            return jsonify({"msg": "Place does not exist"})
+            return jsonify(msg="Place does not exist")
 
         revs = Review.objects(place_id__exact=pid)[:20]
         reviews = []
