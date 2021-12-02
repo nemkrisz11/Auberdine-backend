@@ -20,9 +20,14 @@ def test_get_place(client, token):
     val = resp.json
     assert val["name"] == "Burger King"
     assert val["address"] == "Budapest, Széna tér 7"
+    print(val["location"])
     assert type(val["location"]) == list
     assert val["rating"] == 2.0
-    # TODO: check friend ratings field
+
+    assert "reviews" in val
+    assert len(val["reviews"]) == 2
+    for rev in val["reviews"]:
+        assert rev["name"] in ("Vladimir Putin", "Isaac Newton")
 
 
 @pytest.mark.email("newton@gravity.org")

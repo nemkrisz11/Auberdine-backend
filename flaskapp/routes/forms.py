@@ -32,10 +32,12 @@ class LoginForm(Form):
 
 class PropertiesForm(Form):
     new_name = StringField("Name", validators=[
+        validators.Optional(),
         validators.Length(min=2, max=64, message="A név hossza 2-64 karakter lehet!"),
     ])
 
     new_password = PasswordField("Password", validators=[
+        validators.Optional(),
         validators.Length(min=8, max=128, message="Az új jelszó minimum 8 karakter hosszú kell, hogy legyen!"),
         validators.EqualTo(fieldname="new_confirm", message="A megadott új jelszavak nem egyeznek!")
     ])

@@ -139,6 +139,12 @@ reviews = [
         "text": "Great food and service"
     },
     {
+        "user_id": neumann._id,
+        "place_id": magyaros._id,
+        "rating": 4,
+        "text": "Great place"
+    },
+    {
         "user_id": newton._id,
         "place_id": artbistrobar._id,
         "rating": 5,

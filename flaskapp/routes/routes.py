@@ -4,10 +4,10 @@ from flaskapp.routes.user.logout import LogoutApi
 from flaskapp.routes.user.register import RegisterApi
 from flaskapp.routes.user.properties import PropertiesApi
 from flaskapp.routes.user.profile import ProfileApi
-from flaskapp.routes.place.debug_place import DebugPlaceApi
 from flaskapp.routes.friend_requests.friends import FriendsApi
 from flaskapp.routes.friend_requests.friend_request import FriendRequestApi, FriendRequestsApi
 from flaskapp.routes.user.search import UserSearchApi
+from flaskapp.routes.place.get_place import GetPlaceApi
 
 
 def initialize_routes(api):
@@ -17,8 +17,8 @@ def initialize_routes(api):
     api.add_resource(PropertiesApi, '/api/user/properties')
     api.add_resource(ProfileApi, '/api/user/<user_id>')
     api.add_resource(IndexApi, '/api')
-    api.add_resource(DebugPlaceApi, "/api/place/debug_places")
     api.add_resource(FriendsApi, "/api/user/friends")
     api.add_resource(FriendRequestApi, "/api/user/friend_request")
     api.add_resource(FriendRequestsApi, "/api/user/friend_requests")
     api.add_resource(UserSearchApi, "/api/user/search")
+    api.add_resource(GetPlaceApi, "/api/place/<place_id>")

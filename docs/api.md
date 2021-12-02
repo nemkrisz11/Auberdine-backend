@@ -56,7 +56,7 @@
 | website | String | |
 | location | [Double, Double] | latitude and longitude of the location |
 | rating | Double | |
-| friend_ratings | [RatingDetails] | 
+| reviews | [RatingDetails] | 
 
 
 ## Rating

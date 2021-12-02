@@ -88,8 +88,13 @@ def test_get_user(client, token):
     place = resp.json["reviews"][0]
     assert "Magyaros" in place["place_name"]
     assert place["rating"] == 4
-    assert "public static" in place["text"]
-    assert place["friend_ratings"] == []
+
+    assert "friend_ratings" in place
+    friend_rates = place["friend_ratings"]
+    assert len(friend_rates) == 1
+    assert "Neumann" in friend_rates[0]["name"]
+    assert friend_rates[0]["rating"] == 4
+
 
 
 @pytest.mark.email("newton@gravity.org")
@@ -140,14 +145,14 @@ def test_get_user_properties(client, token):
 @pytest.mark.password("12345678")
 def test_set_user_properties_good_password(client, token):
     headers = {"Authorization": "Bearer " + token}
-    resp = client.post("/api/user/properties", json={"password": "12345678",
+    resp = client.post("/api/user/properties", data={"password": "12345678",
                                                      "new_password": "newton1234",
                                                      "new_confirm": "newton1234"}, headers=headers)
     assert resp.is_json and resp.status_code == 200
     assert "new_name" not in resp.json
     assert "password" not in resp.json
     assert "new_password" not in resp.json
-    resp = client.post("/api/user/login", json={"email": "newton@gravity.org", "password": "newton1234"})
+    resp = client.post("/api/user/login", data={"email": "newton@gravity.org", "password": "newton1234"})
     assert resp.is_json and "access_token" in resp.json
 
 
@@ -155,23 +160,23 @@ def test_set_user_properties_good_password(client, token):
 @pytest.mark.password("12345678")
 def test_set_user_properties_bad_name_bad_pw(client, token):
     headers = {"Authorization": "Bearer " + token}
-    resp = client.post("/api/user/properties", json={"new_name": "q",
+    resp = client.post("/api/user/properties", data={"new_name": "q",
                                                      "password": "111234",
                                                      }, headers=headers)
     assert resp.is_json and resp.status_code == 200
-    assert "new_name" in resp.json
-    assert "password" in resp.json
+    assert "new_name" in resp.json or "password" in resp.json
 
 
 @pytest.mark.email("newton@gravity.org")
 @pytest.mark.password("12345678")
 def test_set_user_properties_good_name(client, token):
     headers = {"Authorization": "Bearer " + token}
-    resp = client.post("/api/user/properties", json={"new_name": "Isaac Oldton",
+    resp = client.post("/api/user/properties", data={"new_name": "Isaac Oldton",
                                                      "password": "12345678",
                                                      }, headers=headers)
     assert resp.is_json and resp.status_code == 200
     assert "new_name" not in resp.json
+    assert resp.json == {}
     resp = client.get("/api/user/properties", headers=headers)
     assert resp.is_json and "name" in resp.json
     assert resp.json["name"] == "Isaac Oldton"

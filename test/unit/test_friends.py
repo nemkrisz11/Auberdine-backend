@@ -113,8 +113,3 @@ def test_send_friend_req(client, token):
     assert other.id not in user.friend_requests
     assert other.id not in user.friends
 
-
-@pytest.mark.email("neumann@x.z")
-@pytest.mark.password("12345678")
-def get_user_search(client, token):
-    pass

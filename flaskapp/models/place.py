@@ -1,4 +1,5 @@
 from mongoengine import Document, StringField, DateTimeField, PointField, URLField, ListField
+from flaskapp.models.review import Review
 
 
 class Place(Document):
@@ -6,12 +7,19 @@ class Place(Document):
     last_sync = DateTimeField()
     name = StringField(required=True)
     address = StringField(required=True)
-    location = PointField()
+    location = PointField()  # Pointfield stores a dict: {"type": "Point", "coordinates": [x,y]}
     website = URLField()
     pictures = ListField(StringField())
     meta = {
         "collection": "places"
     }
+
+    def rating(self):
+        revs = Review.objects(place_id__exact=self.id)
+        total = 0.0
+        for rev in revs:
+            total += rev.rating
+        return total / len(revs)
 
     def __repr__(self):
         fields = {
