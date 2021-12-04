@@ -1,4 +1,4 @@
-from mongoengine import Document, StringField, DateTimeField, PointField, URLField, ListField
+from mongoengine import Document, StringField, DateTimeField, PointField, URLField, ListField, BinaryField
 from flaskapp.models.review import Review
 
 
@@ -9,7 +9,8 @@ class Place(Document):
     address = StringField(required=True)
     location = PointField()  # Pointfield stores a dict: {"type": "Point", "coordinates": [x,y]}
     website = URLField()
-    pictures = ListField(StringField())
+    pictures = ListField(BinaryField())
+    picture_refs = ListField(StringField())
     meta = {
         "collection": "places"
     }

@@ -1,10 +1,5 @@
 import pytest
-import json
-import datetime
-from flask import request
 
-from fixtures import client, token
-from flaskapp.api_query import query_20_places
 from flaskapp.models.place import Place
 from flaskapp.models.review import Review
 from flaskapp.models.user import User
