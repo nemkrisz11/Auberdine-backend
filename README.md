@@ -33,5 +33,12 @@ docker exec -t flask /var/www/test/run_tests.sh --stdout
 curl localhost:80/PATH
 ```
 
+## Dump mongodb
+```
+mongodump -o /data/db/place_dump -d flaskdb -c places mongodb://flaskuser:flaskpass@localhost:27017
+```
 
-
+## Dont read me:
+```
+db.places.aggregate([ {$match: {"pictures.0": {$exists: true}}}, {$project: {imageSize: {$binarySize: {$arrayElemAt: ["$pictures", 0]}}}}, {$sort: {"imageSize": 1}}])
+```

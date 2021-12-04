@@ -64,24 +64,3 @@ def test_rate_place_overwrite_existing(client, token):
     assert reviews[0].text == "This is a new review."
 
 
-
-
-# def test_api(client):
-    # textre = query_20_places(api_key="AIzaSyDtlpG0YZrvbKJ2U2BAnEfCq0nY8Gi7zTk",
-    #                          fields=["formatted_address", "name", "geometry", "photo",
-    #                                  "url", "type"],
-    #                          radius=3000,
-    #                          latitude=47.4926825844774,
-    #                          longitude=19.013803073248987,
-    #                          place_type="food")
-
-    # for info in result["results"]:
-    #     place = Place(google_place_id=info.get("place_id", None),
-    #                   location=[info["geometry"]["location"]["lat"], info["geometry"]["location"]["lng"]],
-    #                   name=info.get("name", None),
-    #                   pictures=[photo["photo_reference"] for photo in info.get("photos", [])],
-    #                   last_sync=datetime.datetime.utcnow(),
-    #                   address=info.get("vicinity", None),
-    #                   website=info.get("url", None)
-    #                   )
-    #     place.save()

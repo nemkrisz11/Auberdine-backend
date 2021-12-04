@@ -3,7 +3,7 @@ import requests
 from urllib import parse
 
 
-def query_20_places(api_key, latitude, longitude, radius, fields, language="hu", place_type="food"):
+def query_20_places(api_key, latitude, longitude, radius, fields, language="hu", place_type="restaurant"):
     params = {
         "location": "{},{}".format(latitude, longitude),
         "radius": str(radius),
@@ -17,7 +17,7 @@ def query_20_places(api_key, latitude, longitude, radius, fields, language="hu",
     querystring = parse.urlencode(items)
     url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?" + querystring
     response = requests.request("GET", url)
-    return response.text
+    return json.loads(response.text)
 
 
 def query_by_pagetoken(api_key, token):
@@ -29,7 +29,7 @@ def query_by_pagetoken(api_key, token):
     querystring = parse.urlencode(items)
     url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?" + querystring
     response = requests.request("GET", url)
-    return response.text
+    return json.loads(response.text)
 
 
 def query_photo(api_key, photo_ref, width=800, height=800):
@@ -43,6 +43,6 @@ def query_photo(api_key, photo_ref, width=800, height=800):
     querystring = parse.urlencode(items)
     url = "https://maps.googleapis.com/maps/api/place/photo?" + querystring
     response = requests.request("GET", url)
-    return response.content
+    return response.content if response.status_code == 200 else None
 
 

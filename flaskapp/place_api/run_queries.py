@@ -2,6 +2,7 @@ from flaskapp import app
 from flaskapp.models.place import Place
 from flaskapp.place_api.api_query import *
 import time
+import json
 import datetime
 import random
 
@@ -34,7 +35,7 @@ def get_random_budapest_circle(radius="random"):
 
 if __name__ == "__main__":
     client = app.create_app()
-    N_QUERIES = 1
+    N_QUERIES = 100
     TIME_DELAY = 10.0
     api_key = "AIzaSyDtlpG0YZrvbKJ2U2BAnEfCq0nY8Gi7zTk"
     fields = ["formatted_address", "name", "geometry", "url"]
@@ -48,6 +49,12 @@ if __name__ == "__main__":
             latitude, longitude, radius = get_random_budapest_circle()
             res = query_20_places(api_key, latitude, longitude, radius, fields)
         q += 1
+
+        print("======= Query {} ========".format(q))
+        if next_page_token is None:
+            print("Location: ({}, {}, {})".format(round(latitude,5), round(longitude,5), radius))
+        else:
+            print("querying by pagetoken")
 
         if "next_page_token" in res:
             next_page_token = res["next_page_token"]
@@ -64,7 +71,7 @@ if __name__ == "__main__":
                            last_sync=datetime.datetime.now(),
                            name=pl["name"],
                            address=pl.get("vicinity", ""),
-                           location=[pl["geometry"]["lat"], pl["geometry"]["lng"]])
+                           location=[pl["geometry"]["location"]["lat"], pl["geometry"]["location"]["lng"]])
 
             url = pl.get("website", pl.get("url", None))
             if url:
@@ -79,6 +86,9 @@ if __name__ == "__main__":
             new_pl.save()
             print("Place saved: {}".format(new_pl.name))
 
+
+        # wait until the next query
+        time.sleep(TIME_DELAY)
 
 
 
