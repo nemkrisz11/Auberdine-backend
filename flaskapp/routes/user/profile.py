@@ -3,6 +3,7 @@ from flask_restful import Resource
 from flask_jwt_extended import jwt_required, current_user
 from bson.objectid import ObjectId, InvalidId
 from mongoengine.errors import DoesNotExist
+import base64
 
 from flaskapp.models.user import User
 from flaskapp.models.review import Review
@@ -23,8 +24,8 @@ class ProfileApi(Resource):
         except (InvalidId, DoesNotExist):
             return jsonify({"msg": "User does not exist"})
 
-        # get always the first 20 reviews, paging on the frontend could fix this
-        user_reviews = Review.objects(user_id=str(user_id))[:20]
+        # get always the first 5 reviews, paging on the frontend could fix this
+        user_reviews = Review.objects(user_id=str(user_id))[:5]
 
         user_reviewed_places = []
         for review in user_reviews:
@@ -46,6 +47,8 @@ class ProfileApi(Resource):
                 "rating": place.rating(),
                 "friend_ratings": friend_ratings
             })
+            if len(place.pictures) > 0:
+                user_reviewed_places[-1]["picture"] = base64.b64encode(place.pictures[0]).decode("UTF-8")
 
         return jsonify({
             "name": user.name,

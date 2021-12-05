@@ -1,11 +1,12 @@
-from flask import jsonify, request
+from flask import jsonify
 from flask_restful import Resource
-from flask_jwt_extended import jwt_required, current_user
+from flask_jwt_extended import jwt_required
 from flaskapp.models.user import User
 from flaskapp.models.place import Place
 from flaskapp.models.review import Review
 from bson.objectid import ObjectId, InvalidId
 from mongoengine.errors import DoesNotExist
+import base64
 
 
 class GetPlaceApi(Resource):
@@ -28,13 +29,20 @@ class GetPlaceApi(Resource):
                 "description": rev.text
             })
 
-        return jsonify({
+        ret_val = {
             "name": place.name,
             "address": place.address,
-            "website": str(place.website),
             "location": place.location["coordinates"],
             "rating": place.rating(),
-            "reviews": reviews
-        })
+            "reviews": reviews,
+        }
+
+        if place.website:
+            ret_val["website"] = place.website
+
+        if len(place.pictures) > 0:
+            ret_val["picture"] = base64.b64encode(place.pictures[0]).decode("UTF-8")
+
+        return jsonify(ret_val)
 
 

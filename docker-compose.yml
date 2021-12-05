@@ -42,7 +42,7 @@ services:
       MONGO_INITDB_DATABASE: flaskdb
       MONGODB_DATA_DIR: /data/db
       MONDODB_LOG_DIR: /dev/null
-      LOAD_MONGODB_DUMP: "false"
+      LOAD_MONGODB_DUMP: "true"
     ports:
       - "27017:27017"
     volumes:
