@@ -1,4 +1,4 @@
-from mongoengine import Document, StringField, DateTimeField, PointField, URLField, ListField, BinaryField
+from mongoengine import Document, StringField, DateTimeField, PointField, URLField, ListField, BinaryField, BooleanField
 from flaskapp.models.review import Review
 
 
@@ -11,6 +11,7 @@ class Place(Document):
     website = URLField()
     pictures = ListField(BinaryField())
     picture_refs = ListField(StringField())
+    reviews_fetched = BooleanField()
     meta = {
         "collection": "places"
     }

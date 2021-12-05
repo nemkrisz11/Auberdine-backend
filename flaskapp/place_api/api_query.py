@@ -46,3 +46,17 @@ def query_photo(api_key, photo_ref, width=800, height=800):
     return response.content if response.status_code == 200 else None
 
 
+def query_place_details(api_key, place_id, fields, language="hu"):
+    params = {
+        "key": api_key,
+        "fields": ",".join(fields),
+        "place_id": place_id,
+        "language": language
+    }
+    items = list(params.items())
+    querystring = parse.urlencode(items)
+    url = "https://maps.googleapis.com/maps/api/place/details/json?" + querystring
+    response = requests.request("GET", url)
+    if response.status_code == 200:
+        return json.loads(response.text)
+    return None

@@ -20,7 +20,7 @@ def init(mongo_uri):
         db.drop_collection(coll)
 
     script_dir = Path(__file__).parent.absolute()
-    initscript = os.path.join(script_dir, "init_flaskdb.js")
+    initscript = os.path.join(script_dir, "05-init_flaskdb.js")
     subprocess.run(["mongo", mongo_uri, initscript])
     for cl in [place.Place, user.User, review.Review]:
         cl.ensure_indexes()

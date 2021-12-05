@@ -37,9 +37,12 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: mongodbuser
       MONGO_INITDB_ROOT_PASSWORD: klqhweroiudslfkjqweilru234
+      MONGODB_USERNAME: flaskuser
+      MONGODB_PASSWORD: flaskpass
       MONGO_INITDB_DATABASE: flaskdb
       MONGODB_DATA_DIR: /data/db
       MONDODB_LOG_DIR: /dev/null
+      LOAD_MONGODB_DUMP: "false"
     ports:
       - "27017:27017"
     volumes:

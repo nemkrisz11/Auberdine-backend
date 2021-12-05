@@ -2,18 +2,23 @@
 
 [API docs](./docs/api.md), [DB docs](./docs/db.md)
 
-## Build and run the backend
+## Build and run
 ```
 docker-compose build 
 docker-compose up
 ```
 
-## Modifying source files
-No restart is needed, as `--reload` in `entrypoint.sh` makes the server update.
-
-## Shutdown backend
+Configure which dump is to be loaded. If you want to load a db dump, then copy it to the `mongoinit`
+folder as `db_dump`, and set the following variable in `docker-compose.yml`:
 ```
-docker-compose down
+LOAD_MONGODB_DUMP: "true"
+```
+If the variable is not set, a default testdb is loaded.
+
+Shutting down with deleting data volumes too:
+
+```
+docker-compose down -v
 ```
 
 ## Run tests
@@ -27,18 +32,18 @@ Run tests and show stdout (prints) too:
 docker exec -t flask /var/www/test/run_tests.sh --stdout
 ```
 
-## Manual testing
-
+## Misc
+Dump mongodb in mongo container:
 ```
-curl localhost:80/PATH
-```
-
-## Dump mongodb
-```
-mongodump -o /data/db/place_dump -d flaskdb -c places mongodb://flaskuser:flaskpass@localhost:27017
+mongodump -o /data/db/db_dump -d flaskdb mongodb://flaskuser:flaskpass@localhost:27017
 ```
 
-## Dont read me:
+Restore mongodb in mongo container
+```
+mongorestore mongodb://flaskuser:flaskpass@localhost:27017/flaskdb /docker-entrypoint-initdb.d/db_dump/flaskdb
+```
+
+Don't read this:
 ```
 db.places.aggregate([ {$match: {"pictures.0": {$exists: true}}}, {$project: {imageSize: {$binarySize: {$arrayElemAt: ["$pictures", 0]}}}}, {$sort: {"imageSize": 1}}])
 ```
