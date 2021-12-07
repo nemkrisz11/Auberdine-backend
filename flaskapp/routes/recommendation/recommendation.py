@@ -63,14 +63,12 @@ class RecommendationApi(Resource):
         global_bests = {}
         for i in range(count):
             global_bests[df.index.values[bests[i]]] = rows[bests[i]]
-            print('{0}: {1} - avg rating:{2}'.format(i, df.index.values[bests[i]], rows[bests[i]]))
 
         # a három féle ajánlás merge-elése (azért jó, mert bármennyi értékelés van bármekkora felhasználó tárorral,
         # mindig a lehető legjobbat kapja
 
         merged_bests = {**global_bests, **global_personal_bests, **global_personal_friends_bests}
         sorted_merged_bests = sorted(merged_bests.items(), key=lambda x: x[1], reverse=True)
-        print(sorted_merged_bests)
         sorted_merged_bests = sorted_merged_bests[:count]
 
         results = []
@@ -122,21 +120,12 @@ class RecommendationApi(Resource):
         data = {user_id: [0] * len(place_ids) for user_id in user_ids}
         place_idx = {place_id: i for i, place_id in enumerate(place_ids)}
 
-        print("good places: {} users: {}".format(len(good_places), len(good_users)))
-
         for review in selected_reviews:
             data[review["user_id"]][place_idx[review["place_id"]]] = review["rating"]
         return data, place_ids
 
     #EZT NE BÁNTSÁTOK:
     def recommend_places(self, user, num_recommended_places, df, df1):
-        print('The list of the Places {} has visited \n'.format(user))
-
-        for m in df[df[user] > 0][user].index.tolist():
-            print(m)
-
-        print('\n')
-
         recommended_places = []
 
         for m in df[df[user] == 0].index.tolist():
@@ -146,12 +135,10 @@ class RecommendationApi(Resource):
 
         sorted_rm = sorted(recommended_places, key=lambda x: x[1], reverse=True)
 
-        print('The list of the Recommended places \n')
         rank = 1
         personal_bests = {}
         for recommended_place in sorted_rm[:num_recommended_places]:
             personal_bests[recommended_place[0]] = recommended_place[1]
-            print('{}: {} - predicted rating:{}'.format(rank, recommended_place[0], recommended_place[1]))
             rank = rank + 1
 
         return personal_bests
