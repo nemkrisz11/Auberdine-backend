@@ -19,9 +19,10 @@ class UserSearchApi(Resource):
 
         results = []
         for user in result:
-            results.append({
-                "name": user.name,
-                "user_id": str(user.id)
-            })
+            if user.id != current_user.id:
+                results.append({
+                    "name": user.name,
+                    "user_id": str(user.id)
+                })
 
         return jsonify(users=results)

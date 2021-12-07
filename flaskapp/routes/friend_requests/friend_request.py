@@ -56,6 +56,9 @@ class FriendRequestApi(Resource):
         except (InvalidId, DoesNotExist):
             return jsonify(msg="Invalid user_id")
 
+        if uid == current_user.id:
+            return jsonify(msg="Bad friend request to yourself")
+
         if uid not in current_user.friend_requests and current_user.id not in other_user.friend_requests:
             other_user.friend_requests.append(current_user.id)
             other_user.save()
