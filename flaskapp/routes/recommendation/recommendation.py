@@ -1,49 +1,57 @@
-from flask import Blueprint
-from flaskapp.models.review import Review
-from flask_jwt_extended import jwt_required, current_user
-from flaskapp.models.place import Place
+from flask import jsonify, request
 from flask_restful import Resource
+from flask_jwt_extended import jwt_required, current_user
+from flaskapp.models.user import User
+from bson.objectid import ObjectId, InvalidId
+from mongoengine.errors import DoesNotExist
+from mongoengine import QuerySet
+from flaskapp.models.place import Place
+from flaskapp.models.review import Review
+from flaskapp.models.user import User
+
+
 import pandas as pd
 from sklearn.neighbors import NearestNeighbors
 import numpy as np
 import random
 import string
 import copy
+import time
+import base64
 
-bp = Blueprint("recommendation", __name__, url_prefix="")
-
-class Recommendations(Resource):
+class RecommendationApi(Resource):
 
     # alapértelmezetten 5-t ajánlást ad vissza, ezt lehet paraméterként megadni
-
-    @bp.route("/user/recommendations")
     @jwt_required()
-    def fetch_recommendation(self, num_of_recs=5):
+    def get(self, count=5):
+        if type(count) != int:
+            try:
+                count = int(count)
+            except ValueError:
+                return jsonify(msg="wrong number format for count")
+
         user_id = current_user.id  # remélem ez jó így
         num_of_neighbors = 3  # ezt lehet változtatni, de szerintem ez így most elég valszeg
-        reviews = Review.objects  # de lehet, hogy ez így nem azta adja vissza, ami várok
-        # a review egy lista, ami Review objektumokat tartlamazzon, ennyi...
 
-
-        # INNEN MÁR NE PISZKÁLJUNK SEMMIT!!! még akkor se ha lassan fut (bár, ahhoz kb 10k User kellene)
-        data, place_ids = self.prepare_datastructure(reviews)
+        data, place_ids = self.prepare_datastructure()
 
 
         # felhasználó ajálásai, ha mindenkit figyelembe veszünk:
         df = pd.DataFrame(data, index=place_ids)
-        df1 = copy.deepcopy(df)
-        global_personal_bests = self.place_recommender(user_id, num_of_neighbors, num_of_recs, df, df1)
+        df1 = df.copy()
+        global_personal_bests = self.place_recommender(user_id, num_of_neighbors, count, df, df1)
 
         #felhasználó ajánlásai, ha csak a barátait vesszük figyelembe:
-        u_friends_ids = current_user.friends()  # current_user barátai
+        u_friends_ids = [friend for friend in current_user.friends]  # current_user barátai
         u_friends_ids.append(current_user.id)  # őt is beletesszük
-        df = pd.DataFrame(data, index=place_ids)  # csak őket vizsgáljuk
+        df = pd.DataFrame(data, index=place_ids)
         df = df[np.array(u_friends_ids)]
-        df1 = copy.deepcopy(df)
-        global_personal_friends_bests = self.place_recommender(user_id, num_of_neighbors, num_of_recs, df, df1)
+        df1 = df.copy()
+        global_personal_friends_bests = self.place_recommender(user_id, num_of_neighbors, count, df, df1)
 
         # a current_user .től független legjobban értékelt helyek (azokat, amiket ő már értékelt, nem tekinti)
-        df = pd.DataFrame(data, index =place_ids)
+
+        df = pd.DataFrame(data, index=place_ids)
         a = df[df.columns.values[0]].to_numpy()
         places_tried = np.nonzero(a)[0]
         b = np.array(list(range(len(a))))
@@ -53,7 +61,7 @@ class Recommendations(Resource):
         bests = np.argsort(rows)[::-1]
 
         global_bests = {}
-        for i in range(num_of_recs):
+        for i in range(count):
             global_bests[df.index.values[bests[i]]] = rows[bests[i]]
             print('{0}: {1} - avg rating:{2}'.format(i, df.index.values[bests[i]], rows[bests[i]]))
 
@@ -63,29 +71,61 @@ class Recommendations(Resource):
         merged_bests = {**global_bests, **global_personal_bests, **global_personal_friends_bests}
         sorted_merged_bests = sorted(merged_bests.items(), key=lambda x: x[1], reverse=True)
         print(sorted_merged_bests)
-        sorted_merged_bests = sorted_merged_bests[:num_of_recs]
+        sorted_merged_bests = sorted_merged_bests[:count]
 
-        # EZT ITT NAGYON MEG KELL NÉZNI, HOGY MEGFELELŐ-E !!!
-        result = [(Place.objects.get(id__exact=review_id)).__repr__() for review_id, score in sorted_merged_bests]
-        return result
+        results = []
+        for place_id, _ in sorted_merged_bests:
+            place = Place.objects.get(id__exact=place_id)
+            results.append({
+                "place_id": str(place.id),
+                "place_name": place.name,
+                "rating": place.rating()
+            })
+            if len(place.pictures) > 0:
+                results[-1]["picture"] = base64.b64encode(place.pictures[0]).decode("UTF-8")
+
+            friend_revs = []
+            for friend_id in current_user.friends:
+                revs = Review.objects(user_id__exact=friend_id, place_id__exact=place_id)
+                if len(revs) > 0:
+                    friend = User.objects.get(id__exact=friend_id)
+                    friend_revs.append({
+                        "name": friend.name,
+                        "rating": revs[0].rating
+                    })
+
+            if friend_revs:
+                results[-1]["friend_ratings"] = friend_revs[:3]
+
+        return jsonify({"recommendations": results})
+
+
 
     #EZT NE BÁNTSÁTOK:
-    def prepare_datastructure(self, reviews):
-        place_ids = np.unique(np.array([review.place_id for review in reviews]))
-        user_ids = np.unique(np.array([review.user_id for review in reviews]))
+    def prepare_datastructure(self):
+        good_users = set([current_user.id] + [u for u in current_user.friends])
+        good_places = set()
+        selected_reviews = []
+        for uid in good_users:
+            for review in Review.objects(user_id__exact=uid):
+                selected_reviews.append(review)
+                good_places.add(review["place_id"])
 
-        data = {}
-        for user_id in user_ids:
-            user_ratings = [review.rating for review in reviews if review.user_id == user_id]
-            user_places = [review.place_id for review in reviews if review.user_id == user_id]
-            ratings_vec = []
-            for place_id in place_ids:
-                if place_id not in user_places:
-                    ratings_vec.append(0)
-                else:
-                    index = user_places.index(place_id)
-                    ratings_vec.append(user_ratings[index])
-            data[user_id] = ratings_vec
+        N_REVIEWS = 400
+        for review in Review.objects.aggregate([{"$sample": {"size": N_REVIEWS}}]):
+            good_users.add(review["user_id"])
+            good_places.add(review["place_id"])
+            selected_reviews.append(review)
+
+        place_ids = np.unique(np.array(list(good_places)))
+        user_ids = np.unique(np.array(list(good_users)))
+        data = {user_id: [0] * len(place_ids) for user_id in user_ids}
+        place_idx = {place_id: i for i, place_id in enumerate(place_ids)}
+
+        print("good places: {} users: {}".format(len(good_places), len(good_users)))
+
+        for review in selected_reviews:
+            data[review["user_id"]][place_idx[review["place_id"]]] = review["rating"]
         return data, place_ids
 
     #EZT NE BÁNTSÁTOK:
@@ -113,6 +153,7 @@ class Recommendations(Resource):
             personal_bests[recommended_place[0]] = recommended_place[1]
             print('{}: {} - predicted rating:{}'.format(rank, recommended_place[0], recommended_place[1]))
             rank = rank + 1
+
         return personal_bests
 
     #EZT NE BÁNTSÁTOK:

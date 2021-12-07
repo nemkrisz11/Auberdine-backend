@@ -5,7 +5,7 @@
 | POST /api/user/register | form-data | [name,email,password] | [name: [String], email: [String], password: [String]] | error messages are in returned strings| Németh Krisztián | &check; | 
 | POST /api/user/login | form-data | [email, password] | [email: [String], password: [String], access_token| JWT returned in body, returned values store error messages | Németh Krisztián | &check; | 
 | POST /api/user/logout | - | - | [msg: String] | "ok" returned if succeed| Németh Krisztián | &check; | 
-| GET /api/user/recommendations | application/json | [count: Int]| [recommendations: Place[] ] | Get list of recommendations | Tremmel Márton | &cross; |
+| GET /api/recommendations | - | [count: Int]| [recommendations: Place[] ] | Get list of recommendations | Tremmel Márton | &cross; |
 | GET /api/place/{place_id} | - | - | [PlaceDetails] | | Tremmel Márton | &cross; | 
 | POST /api/place/rate/ | application/json | [place_id: String, rating: integer, description: String] | [msg: String] | | Tremmel Márton | &cross; | 
 | GET /api/user/{user_id} | - | - | [name, reviews: Place[]] | All places the user has rated. friend_ratings property contains user rating | Németh Krisztián | &check; | 
