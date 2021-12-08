@@ -6,7 +6,9 @@ from flaskapp.models.place import Place
 from flaskapp.models.review import Review
 from bson.objectid import ObjectId, InvalidId
 from mongoengine.errors import DoesNotExist
+from flaskapp.assets.defaults import default_img
 import base64
+
 
 
 class GetPlaceApi(Resource):
@@ -42,6 +44,8 @@ class GetPlaceApi(Resource):
 
         if len(place.pictures) > 0:
             ret_val["picture"] = base64.b64encode(place.pictures[0]).decode("UTF-8")
+        else:
+            ret_val["picture"] = default_img
 
         return jsonify(ret_val)
 

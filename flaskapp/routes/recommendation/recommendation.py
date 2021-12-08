@@ -8,6 +8,7 @@ from mongoengine import QuerySet
 from flaskapp.models.place import Place
 from flaskapp.models.review import Review
 from flaskapp.models.user import User
+from flaskapp.assets.defaults import default_img
 
 
 import pandas as pd
@@ -23,7 +24,7 @@ class RecommendationApi(Resource):
 
     # alapértelmezetten 5-t ajánlást ad vissza, ezt lehet paraméterként megadni
     @jwt_required()
-    def get(self, count=5):
+    def get(self, count=9):
         if type(count) != int:
             try:
                 count = int(count)
@@ -81,6 +82,8 @@ class RecommendationApi(Resource):
             })
             if len(place.pictures) > 0:
                 results[-1]["picture"] = base64.b64encode(place.pictures[0]).decode("UTF-8")
+            else:
+                results[-1]["picture"] = default_img
 
             friend_revs = []
             for friend_id in current_user.friends:
